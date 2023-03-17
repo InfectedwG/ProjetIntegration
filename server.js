@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 import cspOption from './csp-options.js'
+import { getCategoriesDB, getTopCategoriesDB } from './model/methodeDB.js';
 
 // Création du serveur
 const app = express();
@@ -24,11 +25,16 @@ app.use(express.static('public'));
 
 // Ajouter les routes ici ...
 //-------------------------------------- Pages --------------------------------------------
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
+    
     response.render('home', {
         titre: 'Accueil',
+        categories: await getTopCategoriesDB(),
+        styles: ['/css/dropdown-menu.css'],
+        headerCategories: await getCategoriesDB(),
 
     });
+
 });
 app.get('/privacy-policy', (request, response) => {
     response.render('privacy-policy', {

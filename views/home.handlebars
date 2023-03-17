@@ -43,75 +43,18 @@
         </li>
     </ul>
     <div class="row">
+        {{#each categories}}
         <div class="col-4 col-md py-3">
             <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card1.jpg" class="card-img-top" alt="...">
+                <img src="/img/home/{{this.img_name}}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <a href="#" class="card-link text-warning">FOUNTAINES & ACCESSORIES</a>
+                    <a href="#" class="card-link text-warning">{{this.name}}</a>
                 </div>
             </div>
         </div>
-
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card2.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">FEEDERS</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card3.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">TOYS</a>
-                </div>
-            </div>
-        </div>
+        {{/each}}        
     </div>
-
-    <div class="row">
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card4.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">SCRATCHING</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card5.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">LITTER</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/card6.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">STICKY PAWS</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container py-3">
-        <div class="row">
-            <div class="col-4 col-md">
-                <div class="card text-center" style="width: 18rem;">
-                    <img src="/img/home/card7.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <a href="#" class="card-link text-warning">DRAWSTRING TIE WASTE BAGS</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    
 </div>
 </div>
 

@@ -2,9 +2,23 @@
     <div class="container">
         <div class="row">
             <div class="col-2 p-0">
-                <a href="/"><img src="/img/header/logo.png" alt="accueil" class="img-responsive img-thumbnail border-0 p-0" ></a>
+                <a href="/"><img src="/img/header/logo.png" alt="accueil"
+                        class="img-responsive img-thumbnail border-0 p-0"></a>
             </div>
-            <a href="" class="col offset-3 p-0" style="color: black; font-weight: bold;">COLLECTION</a>
+            <div class="col offset-3 p-0">
+                
+                <button class="menu-trigger" style="color: black; font-weight: bold;">
+                    COLLECTION
+                </button>
+                <div class="menu-container">
+                    <ul class="menu-items" >
+                        {{#each headerCategories}}
+                        <li><a href="#">{{this.name}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+                
+            </div>
             <a href="" class="col p-0" style="color: black; font-weight: bold;">CONTACT US</a>
             <a href="" class="col p-0" style="color: black; font-weight: bold;">ABOUT US</a>
             <div class="col-xsm p-0" style="width: 63.13px;">
@@ -15,8 +29,8 @@
             <button class="btn btn-warning"
                 style="background-color: orange; width: 160px; height: 53.33px; border-radius: 10.67px; padding: 0; display: flex; justify-content: space-between; align-items: center;">
                 <div style="width: 30%; height: 100%; display: flex; align-items: center;">
-                    <img id="1" src="/img/header/shopping_cart.jpg" alt=""
-                        style="max-height: 100%; max-width: 100%; margin-right: 10px;">
+                    <img id="1" src="/img/header/shopping_cart_logo.png" alt=""
+                        style="max-height: 100%; max-width: 100%; margin-right: 10px; padding-left: 5px">
                 </div>
                 <div
                     style="width: 70%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-center;">
@@ -29,6 +43,6 @@
                     </div>
                 </div>
             </button>
-        </div>        
+        </div>
     </div>
 </header>
