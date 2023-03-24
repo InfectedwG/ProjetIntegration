@@ -44,6 +44,13 @@ app.get('/privacy-policy', (request, response) => {
     });
 });
 
+app.get('/panier', (request, response) => {
+    response.render('panier', {
+        titre: 'Panier',
+        styles: ['/css/panier.css'],
+    });
+});
+
 //-----------------------------------------------------------------------------------------
 
 // Renvoyer une erreur 404 pour les routes non définies

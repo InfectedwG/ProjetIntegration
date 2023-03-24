@@ -27,6 +27,7 @@ const createDatabase = async (connectionPromise) => {
             smart_tips text,
             info text,
             features text,
+            img_name text,
             foreign key (category_id) references Categories(id));
                     
         CREATE TABLE IF NOT EXISTS Users(
