@@ -1,12 +1,12 @@
 import connectionPromise from './connexion.js';
 
-export const getProduitParCategorieDB = async (category_id) => {
+export const getProduitsByCategoryDB = async (category_id) => {
     let connexion = await connectionPromise;
 
     let resultat = await connexion.all(
         `
         select *
-        from Product
+        from Products
         where category_id = ?;
         `, [category_id]
     );
@@ -18,7 +18,7 @@ export const getTopCategoriesDB = async () => {
 
     let resultat = await connexion.all(
         `
-        select name, img_name
+        select *
         from Categories
         limit 6;
         `
@@ -39,6 +39,8 @@ export const getCategoriesDB = async () => {
 
     return resultat;
 }
+
+
 
 export const getProductByIdDB = async (product_id) => {
     let connexion = await connectionPromise;

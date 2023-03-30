@@ -9,9 +9,9 @@ if(process.env.NODE_ENV === 'development'){
                 blockAllMixedContent: [],
                 fontSrc: ["'self'", "https:", "data:"],
                 frameAncestors: ["'self'"],
-                imgSrc: ["'self'", "data:"],
+                imgSrc: ["'self'", "data:", "https://via.placeholder.com/"],
                 objectSrc: ["'none'"],
-                scriptSrc: ["'self'",  "'nonce-browser-sync'"],
+                scriptSrc: ["'self'",  "'nonce-38db610ac4'"],
                 scriptSrcAttr: ["'none'"],
                 styleSrc: ["'self'", "https:", "'unsafe-inline'"],
                 upgradeInsecureRequests: []

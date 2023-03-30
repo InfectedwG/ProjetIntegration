@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="InteractiveTitle">
+        Interactive
+    </div>
+
+    <div class="row product-list">
+        {{#each produits}}
+        <div class="col-4 products" >
+            <button class="produits" id="{{this.id}}" >
+                <div class="product-container">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/150x150.png" alt="Product Image" >
+                    </a>
+                    <a href="#" class="product-name">{{this.name}}</a>
+                    <p class="product-price">{{this.price}}</p>
+                </div>
+            </button>
+        </div>
+        {{/each}}
+    </div>
+</div>

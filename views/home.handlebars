@@ -1,3 +1,5 @@
+
+
 <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel">
 
     <div class="carousel-inner">
@@ -33,7 +35,9 @@
     <img src="/img/home/A.png" class="img-fluid w-100 a-img" alt="...">
     <ul class="nav justify-content-end">
         <li class="nav-item m-3">
-            <a class="btn btn-outline-secondary" aria-current="page" href="#">PRODUCT CATEGORIES</a>
+            <button id="test">
+                <a class="btn btn-outline-secondary" aria-current="page" id="test">PRODUCT CATEGORIES</a>
+            </button>
         </li>
         <li class="nav-item m-3">
             <a class="btn btn-outline-secondary" href="#">BEST SELLERS</a>
@@ -44,17 +48,19 @@
     </ul>
     <div class="row">
         {{#each categories}}
-        <div class="col-4 col-md py-3">
-            <div class="card text-center" style="width: 18rem;">
-                <img src="/img/home/{{this.img_name}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="card-link text-warning">{{this.name}}</a>
+        <div class="col-4 col-md py-3" >
+            <button class="categorie" id="{{this.id}}">
+                <div class="card text-center" style="width: 18rem;">
+                    <img src="/img/home/{{this.img_name}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <a href="#" class="card-link text-warning">{{this.name}}</a>
+                    </div>
                 </div>
-            </div>
+            </button>
         </div>
-        {{/each}}        
+        {{/each}}
     </div>
-    
+
 </div>
 </div>
 
@@ -79,6 +85,3 @@
     </div>
 
 </div>
-
-
-
