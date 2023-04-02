@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container pt-5">
     <section class="flex shoppingpart">
         <div>
             <div class="shoppinginfo">
@@ -24,29 +24,31 @@
                             <p>Quantity</p>
                         </td>
                         <td>
-                            <p>Subtital</p>
+                            <p>Subtotal</p>
                         </td>
                     </tr>
+                    {{#each produits}}
                     <tr>
                         <td>
-                            <div class="flex red"><i class="fa-solid fa-xmark"></i></div>
+                            <div class="flex red"><input type="checkbox" class="item-isSelected" {{#if this.is_selected}} checked {{/if}}></div>
                         </td>
                         <td>
                             <div class="flex"><img src="img/cat.jpg" /></div>
                         </td>
                         <td>
-                            <p>Toy Box for cats</p>
+                            <p id="{{this.product_id}}" class="item-id">{{this.name}}</p>
                         </td>
                         <td>
-                            <p>$22.99</p>
+                            <p class="item-price">{{this.price}}</p>
                         </td>
                         <td>
-                            <div class="flex"><input type="number" value="1"></div>
+                            <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}" min="0" max="10"></div>
                         </td>
                         <td>
-                            <p>$22.99</p>
+                            <p class="item-subtotal">{{this.subtotal}}</p>
                         </td>
                     </tr>
+                    {{/each}}
                     <tr>
                         <td colspan="6">
                             <div class="flex w100 spacer">
@@ -55,7 +57,7 @@
                                     <input type="button" class="black padding10" value="APPLY COUPON" />
                                 </div>
                                 <div class="flex right lastbtn">
-                                    <input type="button" class="flex grey padding10" value="UPDATE CART" />
+                                    <input type="button" class="flex grey padding10" value="UPDATE CART" id="update-cart-btn" />
                                 </div>
                             </div>
                         </td>
@@ -80,7 +82,7 @@
                                 <p>Subtotal</p>
                             </td>
                             <td>
-                                <p>$22.99</p>
+                                <p id="subtotal">{{subtotal}}</p>
                             </td>
                         </tr>
                         <tr>
@@ -96,7 +98,7 @@
                                 <p>Tax</p>
                             </td>
                             <td>
-                                <p>$0.00</p>
+                                <p id="tax"></p>
                             </td>
                         </tr>
                         <tr>
@@ -104,7 +106,7 @@
                                 <p>Total</p>
                             </td>
                             <td>
-                                <p>$22.99</p>
+                                <p id="total"></p>
                             </td>
                         </tr>
                     </table>

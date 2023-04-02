@@ -40,6 +40,20 @@ export const getCategoriesDB = async () => {
     return resultat;
 }
 
+export const getCategoryNameByIdDB = async (category_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.all(
+        `
+        select name
+        from Category
+        where id = ?;
+        `, [category_id]
+    );
+
+    return resultat;
+}
+
 
 
 export const getProductByIdDB = async (product_id) => {
@@ -56,15 +70,29 @@ export const getProductByIdDB = async (product_id) => {
     return resultat;
 }
 
+export const getProductNameByIdDB = async (product_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.all(
+        `
+        select name
+        from Products
+        where id = ?;
+        `, [product_id]
+    );
+
+    return resultat;
+}
+
 export const getCartListItemsByUserIdDB = async (user_id) => {
     let connexion = await connectionPromise;
 
     let resultat = await connexion.all(
         `
-        select ci.product_id, ci.quantity, ci.is_Selected, p.name, p.description
+        select ci.product_id as product_id, ci.quantity as quantity, ci.is_selected as is_selected, p.name as name, p.price as price
         from Cart c
         join Cart_Items ci on ci.cart_id = c.id
-        join Product p on ci.product_id = p.id
+        join Products p on ci.product_id = p.id
         where c.user_id = ?;
         `, [user_id]
     );
@@ -166,6 +194,33 @@ export const changeUserAccessDB = async (user_id, access_id) => {
         set access_id = ?
         where id = ?
         `, [access_id, user_id]
+    );
+    return resultat.lastID;
+}
+
+export const getCartIdByUserIdDB = async (user_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.all(
+        `
+        select id
+        from Cart
+        where user_id = ?
+        `, [user_id]
+    );
+    return resultat;
+}
+
+export const updateCartItemsByProductIdAndCartIdDB = async (cart_id, product_id, quantity, is_selected) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+        `
+        update Cart_Items
+        set quantity = ?,
+            is_selected = ?
+        where cart_id = ? and product_id = ?
+        `, [quantity, is_selected, cart_id, product_id]
     );
     return resultat.lastID;
 }

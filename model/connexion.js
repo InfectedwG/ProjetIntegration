@@ -73,10 +73,10 @@ const createDatabase = async (connectionPromise) => {
             foreign key (user_id) references Users(user_id));
             
         CREATE TABLE IF NOT EXISTS Cart_Items(
-            cart_id integer primary key,
+            cart_id integer,
             product_id integer not null,
             quantity integer not null, 
-            is_Selected integer not null,
+            is_selected integer not null,
             foreign key (cart_id) references Cart(cart_id),
             foreign key (product_id) references Products(product_id));
                         
@@ -99,7 +99,7 @@ const createDatabase = async (connectionPromise) => {
             ('Wild bird products', null);
                     
         INSERT INTO Products (name, price, category_id, description, smart_tips, info, features) 
-            VALUES ('Pet bed', 29.99, 1, 'Comfortable and durable bed for your furry friend', 'Machine-washable cover', 
+            VALUES  ('Pet bed', 29.99, 1, 'Comfortable and durable bed for your furry friend', 'Machine-washable cover', 
                     'Dimensions: 24" x 18"', 'Soft and cozy material, easy to assemble'),
                     
                     ('Cat scratching post', 15.99, 2, 'Helps keep your cat''s claws healthy and strong', 
@@ -122,6 +122,15 @@ const createDatabase = async (connectionPromise) => {
                     
                     ('Cat food dispenser', 19.99, 2, 'Automatic feeder for your cat''s meals', 
                     'Programmable timer and portion control', 'Capacity: 4.5 lbs', 'Easy to clean, runs on batteries');
+
+
+        INSERT INTO Cart (user_id, subtotal)
+            VALUES (2, 0.00);
+
+        INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
+            VALUES  (1, 1, 1, 1),
+                    (1, 2, 2, 1),
+                    (1, 3, 1, 0);
         `
     );
 
