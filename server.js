@@ -7,8 +7,9 @@ import expressHandlebars from 'express-handlebars';
 import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
-import cspOption from './csp-options.js'
-import * as model from './model/methodeDB.js'
+import cspOption from './csp-options.js';
+import * as model from './model/methodeDB.js';
+import * as serveur from './model/methodeServeur.js';
 
 // Création du serveur
 const app = express();
@@ -26,15 +27,14 @@ app.use(express.static('public'));
 // Ajouter les routes ici ...
 //-------------------------------------- Pages --------------------------------------------
 app.get('/', async (request, response) => {
-
-    
+            
     response.render('home', {
         titre: 'Accueil',
         categories: await model.getTopCategoriesDB(),
         styles: ['/css/dropdown-menu.css'],
         scripts: ['/js/home.js'],
         headerCategories: await model.getCategoriesDB(),
-
+        headerCart: await serveur.headerCartMethode(),
     });
 
 });
@@ -45,9 +45,11 @@ app.get('/category', async (request, response) => {
 
     response.render('category', {
         titre: categoryName,
-        styles: ['/css/category.css'],
+        styles: ['/css/category.css', '/css/dropdown-menu.css'],
         scripts: ['/js/category.js'],
-        produits: await model.getProduitsByCategoryDB(request.query.id_category)
+        produits: await model.getProduitsByCategoryDB(request.query.id_category),
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: await serveur.headerCartMethode(),
     });
 });
 
@@ -58,16 +60,20 @@ app.get('/product', async (request, response) => {
 
     response.render('product', {
         titre: productName,
-        styles: ['/css/product.css'],
+        styles: ['/css/product.css', '/css/dropdown-menu.css'],
         scripts: ['/js/product.js'],
-        produit: await model.getProductByIdDB(request.query.id_produit)
+        produit: await model.getProductByIdDB(request.query.id_produit),
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: await serveur.headerCartMethode(),
     });
 });
 
-app.get('/privacy-policy', (request, response) => {
+app.get('/privacy-policy', async (request, response) => {
     response.render('privacy-policy', {
         titre: 'Privacy Policy',
-        styles: ['/css/privacy-policy.css'],
+        styles: ['/css/privacy-policy.css', '/css/dropdown-menu.css'],
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: await serveur.headerCartMethode(),
 
     });
 });
@@ -83,10 +89,32 @@ app.get('/panier', async (request, response) => {
 
     response.render('panier', {
         titre: 'Panier',
-        styles: ['/css/panier.css'],
+        styles: ['/css/panier.css', '/css/dropdown-menu.css'],
         scripts: ['/js/panier.js'],
         produits: produits,
         subtotal: subtotal.toFixed(2),
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: await serveur.headerCartMethode(),
+    });
+});
+
+app.get('/checkout', async (request, response) => {
+    let produits = await model.getCartListItemsByUserIdDB(request.query.user_id);
+    let subtotal = 0;
+    
+    for(let p of produits){
+        p.subtotal = p.price*p.quantity;
+        subtotal += p.subtotal;
+    }
+
+    response.render('checkout', {
+        titre: 'Checkout',
+        styles: ['/css/dropdown-menu.css'],
+        scripts: [], 
+        produits: produits,
+        subtotal: subtotal.toFixed(2),
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: await serveur.headerCartMethode(),
     });
 });
 
@@ -107,6 +135,8 @@ app.patch('/api/update_cart', async (request, response) => {
     response.status(201).end();
     
 });
+
+
 
 // Renvoyer une erreur 404 pour les routes non définies
 app.use(function (request, response) {

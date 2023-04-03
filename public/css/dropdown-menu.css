@@ -41,8 +41,10 @@
     text-decoration: underline;
   }
   
-  .menu-trigger:focus + .menu-container {
+  .menu-trigger:focus + .menu-container:focus{
     display: block;
     z-index: 100;
   }
+
+  
   

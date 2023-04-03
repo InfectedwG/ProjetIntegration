@@ -32,7 +32,7 @@ export const getCategoriesDB = async () => {
 
     let resultat = await connexion.all(
         `
-        select name
+        select name, id
         from Categories;
         `
     );
@@ -45,8 +45,8 @@ export const getCategoryNameByIdDB = async (category_id) => {
 
     let resultat = await connexion.all(
         `
-        select name
-        from Category
+        select name, id
+        from Categories
         where id = ?;
         `, [category_id]
     );
@@ -224,6 +224,8 @@ export const updateCartItemsByProductIdAndCartIdDB = async (cart_id, product_id,
     );
     return resultat.lastID;
 }
+
+
 
 export const getGabaritDB = async () => {
     let connexion = await connectionPromise;

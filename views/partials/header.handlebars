@@ -13,7 +13,7 @@
                 <div class="menu-container">
                     <ul class="menu-items" >
                         {{#each headerCategories}}
-                        <li><a href="#">{{this.name}}</a></li>
+                        <li><a class="maybe" href="/category?id_category={{this.id}}">{{this.name}}</a></li>
                         {{/each}}
                     </ul>
                 </div>
@@ -28,7 +28,7 @@
 
             <a href="/panier" class="panier-btn">
                 <button class="btn btn-warning"
-                style="background-color: orange; width: 160px; height: 53.33px; border-radius: 10.67px; padding: 0; display: flex; justify-content: space-between; align-items: center;"
+                style="background-color: orange; width: 190px; height: 55px; border-radius: 10.67px; padding: 0; padding-right: 5px; margin-top: 3px; display: flex; justify-content: space-between; align-items: center;"
                 id="panier-btn">
                 <div style="width: 30%; height: 100%; display: flex; align-items: center;">
                     <img id="1" src="/img/header/shopping_cart_logo.png" alt=""
@@ -40,8 +40,8 @@
                         <p id="2" style="margin: 0; color: white; font-size: 14px; font-weight: bold;">Shopping Cart
                         </p>
                         <p id="3"
-                            style="margin: 0; color: white; font-size: 14px; margin-top: 0.2rem; font-weight: bold;">
-                            0 items - $0.00</p>
+                            style="margin: 0; color: white; font-size: 14px; margin-top: 0.2rem; font-weight: bold; padding-left: 0;">
+                            {{headerCart.number_of_items}} items - ${{headerCart.subtotal}}</p>
                     </div>
                 </div>
             </button>

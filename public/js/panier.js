@@ -2,6 +2,7 @@ let subtotal = document.getElementById('subtotal');
 let total = document.getElementById('total');
 let tax = document.getElementById('tax');
 let updateCartBtn = document.getElementById('update-cart-btn');
+let checkoutBtn = document.getElementById('btn-checkout');
 
 let taxRate = 0.14975;
 
@@ -61,3 +62,14 @@ const updateCart = () => {
 }
 
 updateCartBtn.addEventListener('click', updateCart);
+checkoutBtn.addEventListener('click', () => {
+    let userId = 2;
+
+    let data = {
+        user_id: userId,
+    }
+
+    let queryString = new URLSearchParams(data).toString();
+
+    window.location.href = `/checkout?${queryString}`;
+});

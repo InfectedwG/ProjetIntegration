@@ -42,7 +42,7 @@
                             <p class="item-price">{{this.price}}</p>
                         </td>
                         <td>
-                            <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}" min="0" max="10"></div>
+                            <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}" min="1" max="10"></div>
                         </td>
                         <td>
                             <p class="item-subtotal">{{this.subtotal}}</p>
@@ -110,7 +110,7 @@
                             </td>
                         </tr>
                     </table>
-                    <input type="button" value="PROCEED TO CHECKOUT" class="checkbtn black" />
+                    <input type="button" value="PROCEED TO CHECKOUT" class="checkbtn black" id="btn-checkout"/>
                 </div>
             </div>
         </div>
