@@ -1,4 +1,68 @@
 import connectionPromise from './connexion.js';
+import { hash } from 'bcrypt';
+
+export const addUserBasicDB = async (email, password, prenom, nom) => {
+    let connexion = await connectionPromise;
+
+    let passwordHashed = await hash(password, 10);
+
+    let resultat = await connexion.run(
+        `
+        insert into Users(first_name, last_name, email, password, access_id)
+        values(?, ?, ?, ?, 1)
+        `, [prenom, nom, email, passwordHashed]
+    );
+    await connexion.run(
+        `
+        insert into Cart(user_id)
+        values(?)
+        `, [resultat.lastID]
+    )
+
+    return resultat.lastID;
+}
+
+export const getUserByEmail = async (email) => {
+    let connexion = await connectionPromise;
+
+    let user = await connexion.get(
+        `
+        select *
+        from Users
+        where email = ?
+        `, [email]
+    )
+
+    return user;
+}
+
+// trouve un utilisateur avec son id
+export const getUserById = async (user_id) => {
+    let connexion = await connectionPromise;
+
+    let user = await connexion.get(
+        `
+        select *
+        from Users
+        where id = ?
+        `, [user_id]
+    )
+
+    return user;
+}
+
+export const getAllUser = async () => {
+    let connexion = await connectionPromise;
+
+    let users = await connexion.all(
+        `
+        select *
+        from Users
+        `
+    )
+
+    return users;
+}
 
 export const getProduitsByCategoryDB = async (category_id) => {
     let connexion = await connectionPromise;
@@ -10,6 +74,43 @@ export const getProduitsByCategoryDB = async (category_id) => {
         where category_id = ?;
         `, [category_id]
     );
+    return resultat;
+}
+export const getSameCategoryProductsByProductId = async (product_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.all(
+        `
+          SELECT p2.id, p2.code, p2.name, p2.price
+          FROM Products p1 
+          INNER JOIN Products p2 ON p1.category_id = p2.category_id 
+          WHERE p1.id = ?
+          ;
+        `, [product_id]
+
+
+    
+
+    );
+
+    return resultat;
+}
+
+export const getCategoryNameByProductId = async (product_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.all(
+        `
+        SELECT Categories.name
+        FROM Categories 
+        INNER JOIN Products 
+        ON Categories.id = Products.category_id 
+        WHERE Products.id = ?;
+        `, [product_id]
+
+
+    );
+
     return resultat;
 }
 
@@ -73,7 +174,7 @@ export const getProductByIdDB = async (product_id) => {
 export const getProductNameByIdDB = async (product_id) => {
     let connexion = await connectionPromise;
 
-    let resultat = await connexion.all(
+    let resultat = await connexion.get(
         `
         select name
         from Products
@@ -201,7 +302,7 @@ export const changeUserAccessDB = async (user_id, access_id) => {
 export const getCartIdByUserIdDB = async (user_id) => {
     let connexion = await connectionPromise;
 
-    let resultat = await connexion.all(
+    let resultat = await connexion.get(
         `
         select id
         from Cart
@@ -223,6 +324,36 @@ export const updateCartItemsByProductIdAndCartIdDB = async (cart_id, product_id,
         `, [quantity, is_selected, cart_id, product_id]
     );
     return resultat.lastID;
+}
+
+export const deleteCartItemsByProductIdAndCartIdDB = async (cart_id, product_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+        `
+        delete from Cart_Items        
+        where cart_id = ? and product_id = ?
+        `, [cart_id, product_id]
+    );
+    return resultat;
+}
+
+export const addProductInCartDB = async (cart_id, product_id, quantity, is_selected) => {
+
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+
+        `
+        INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
+        values (?, ?, ?, ?)
+        `
+        ,[cart_id, product_id, quantity, is_selected]
+
+    );
+
+    return resultat;
+
 }
 
 

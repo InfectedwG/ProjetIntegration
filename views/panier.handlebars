@@ -11,7 +11,7 @@
         <div class="grid w100">
             <div class="padspace">
                 <table>
-                    <tr>
+                    <thead>
                         <td></td>
                         <td></td>
                         <td>
@@ -26,30 +26,34 @@
                         <td>
                             <p>Subtotal</p>
                         </td>
-                    </tr>
-                    {{#each produits}}
-                    <tr>
-                        <td>
-                            <div class="flex red"><input type="checkbox" class="item-isSelected" {{#if this.is_selected}} checked {{/if}}></div>
-                        </td>
-                        <td>
-                            <div class="flex"><img src="img/cat.jpg" /></div>
-                        </td>
-                        <td>
-                            <p id="{{this.product_id}}" class="item-id">{{this.name}}</p>
-                        </td>
-                        <td>
-                            <p class="item-price">{{this.price}}</p>
-                        </td>
-                        <td>
-                            <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}" min="1" max="10"></div>
-                        </td>
-                        <td>
-                            <p class="item-subtotal">{{this.subtotal}}</p>
-                        </td>
-                    </tr>
-                    {{/each}}
-                    <tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        {{#each produits}}
+                        <tr class="produits">
+                            <td>
+                                <div class="flex red"><input type="checkbox" class="item-isSelected" {{#if
+                                        this.is_selected}} checked {{/if}}></div>
+                            </td>
+                            <td>
+                                <div class="flex"><img src="img/cat.jpg" /></div>
+                            </td>
+                            <td>
+                                <p id="{{this.product_id}}" class="item-id">{{this.name}}</p>
+                            </td>
+                            <td>
+                                <p class="item-price">{{this.price}}</p>
+                            </td>
+                            <td>
+                                <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}"
+                                        min="0" max="10"></div>
+                            </td>
+                            <td>
+                                <p class="item-subtotal">{{this.subtotal}}</p>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                    <tfoot>
                         <td colspan="6">
                             <div class="flex w100 spacer">
                                 <div class="flex left">
@@ -57,11 +61,13 @@
                                     <input type="button" class="black padding10" value="APPLY COUPON" />
                                 </div>
                                 <div class="flex right lastbtn">
-                                    <input type="button" class="flex grey padding10" value="UPDATE CART" id="update-cart-btn" />
+                                    <input type="button" class="flex grey padding10" value="UPDATE CART"
+                                        id="update-cart-btn" />
                                 </div>
                             </div>
                         </td>
-                    </tr>
+                    </tfoot>
+
                 </table>
             </div>
             <div class="flex padspace">
@@ -110,7 +116,7 @@
                             </td>
                         </tr>
                     </table>
-                    <input type="button" value="PROCEED TO CHECKOUT" class="checkbtn black" id="btn-checkout"/>
+                    <input type="button" value="PROCEED TO CHECKOUT" class="checkbtn black" id="btn-checkout" />
                 </div>
             </div>
         </div>

@@ -2,17 +2,26 @@
 import 'dotenv/config';
 
 // Importer les fichiers et librairies
+import session from 'express-session';
+import memorystore from 'memorystore';
 import express, { json, request, response, urlencoded } from 'express';
 import expressHandlebars from 'express-handlebars';
 import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 import cspOption from './csp-options.js';
+import passport from 'passport';
 import * as model from './model/methodeDB.js';
 import * as serveur from './model/methodeServeur.js';
+import './authentification.js';
+import { validationInscription } from './validationInscription.js';
+import { validationConnexion } from './validationConnexion.js';
+import middlewareSse from './middlewareSse.js';
+
 
 // Création du serveur
 const app = express();
+const MemoryStore = memorystore(session);
 app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 
@@ -23,24 +32,101 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use(session({
+    cookie: { maxAge: 3600000 },
+    name: process.env.npm_package_name,
+    store: new MemoryStore({ checkPeriod: 3600000 }),
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(middlewareSse());
+
+const taxRate = 0.14975;
+
+
 
 // Ajouter les routes ici ...
 //-------------------------------------- Pages --------------------------------------------
 app.get('/', async (request, response) => {
-            
+
+    
+    let cartAccess = false;
+
+    let headerCart;
+
+    if (request.user) {
+        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+    }
+    else {
+        headerCart = {
+            subtotal: '0.00',
+            number_of_items: '0',
+        }
+    }
+
+    if(request.user && request.user.access_id === 1){
+        cartAccess = true;
+    }
+
     response.render('home', {
         titre: 'Accueil',
         categories: await model.getTopCategoriesDB(),
         styles: ['/css/dropdown-menu.css'],
         scripts: ['/js/home.js'],
         headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
+        headerCart: headerCart,
+        cartAccess: cartAccess,
     });
 
 });
 
+app.get('/login-signup', async (request, response) => {
+
+    let cartAccess = false;
+
+    if(request.user && request.user.access_id === 1){
+        cartAccess = true;
+    }
+
+    let headerCart = {
+        subtotal: '0.00',
+        number_of_items: '0',
+    };
+
+    response.render('login-inscription', {
+        titre: 'Connexion/Inscription',
+        styles: ['css/login-inscription.css', '/css/dropdown-menu.css'],
+        scripts: ['js/login-signup.js'],
+        headerCategories: await model.getCategoriesDB(),
+        headerCart: headerCart,
+        cartAccess: cartAccess,
+
+    });
+});
+
 app.get('/category', async (request, response) => {
-    
+
+    let cartAccess = false;
+
+    let headerCart;
+
+    if (request.user) {
+        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+    }
+    else {
+        headerCart = {
+            subtotal: '0.00',
+            number_of_items: '0',
+        }
+    }
+
+    if(request.user && request.user.access_id === 1){
+        cartAccess = true;
+    }
+
     let categoryName = await model.getCategoryNameByIdDB(request.query.id_category);
 
     response.render('category', {
@@ -49,91 +135,319 @@ app.get('/category', async (request, response) => {
         scripts: ['/js/category.js'],
         produits: await model.getProduitsByCategoryDB(request.query.id_category),
         headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
+        headerCart: headerCart,
+        cartAccess: cartAccess,
     });
 });
 
 
 app.get('/product', async (request, response) => {
+    
+
+    let cartAccess = false;
+
+    let headerCart;
+
+    if (request.user) {
+        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+    }
+    else {
+        headerCart = {
+            subtotal: '0.00',
+            number_of_items: '0',
+        }
+    }
+
+    if(request.user && request.user.access_id === 1){
+        cartAccess = true;
+    }
 
     let productName = await model.getProductNameByIdDB(request.query.id_produit);
 
     response.render('product', {
-        titre: productName,
+        titre: productName.name,
         styles: ['/css/product.css', '/css/dropdown-menu.css'],
         scripts: ['/js/product.js'],
+        categorieproduit: await model.getCategoryNameByProductId(request.query.id_produit),
+        pruductsbycategorie: await model.getSameCategoryProductsByProductId(request.query.id_produit),
         produit: await model.getProductByIdDB(request.query.id_produit),
         headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
+        headerCart: headerCart,
+        cartAccess: cartAccess,
     });
 });
 
 app.get('/privacy-policy', async (request, response) => {
+
+    let cartAccess = false;
+
+    let headerCart;
+
+    if (request.user) {
+        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+    }
+    else {
+        headerCart = {
+            subtotal: '0.00',
+            number_of_items: '0',
+        }
+    }
+
+    if(request.user && request.user.access_id === 1){
+        cartAccess = true;
+    }
+
     response.render('privacy-policy', {
         titre: 'Privacy Policy',
         styles: ['/css/privacy-policy.css', '/css/dropdown-menu.css'],
         headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
+        headerCart: headerCart,
+        cartAccess: cartAccess,
 
     });
 });
 
 app.get('/panier', async (request, response) => {
-    let produits = await model.getCartListItemsByUserIdDB(2);
-    let subtotal = 0;
-    
-    for(let p of produits){
-        p.subtotal = p.price*p.quantity;
-        subtotal += p.subtotal;
-    }
 
-    response.render('panier', {
-        titre: 'Panier',
-        styles: ['/css/panier.css', '/css/dropdown-menu.css'],
-        scripts: ['/js/panier.js'],
-        produits: produits,
-        subtotal: subtotal.toFixed(2),
-        headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
-    });
+    let cartAccess = false;
+
+    if (request.user && request.user.access_id === 1) {
+
+        let headerCart;
+
+        cartAccess = true;
+
+        if (request.user) {
+            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        }
+        else {
+            headerCart = {
+                subtotal: '0.00',
+                number_of_items: '0',
+            }
+        }
+
+        let produits = await model.getCartListItemsByUserIdDB(request.user.id);
+        let subtotal = 0;
+
+
+        for (let p of produits) {
+            let productSubtotal = p.price * p.quantity;
+            p.subtotal = productSubtotal.toFixed(2);
+            subtotal += productSubtotal;
+        }
+
+        response.render('panier', {
+            titre: 'Panier',
+            styles: ['/css/panier.css', '/css/dropdown-menu.css'],
+            scripts: ['/js/panier.js'],
+            produits: produits,
+            subtotal: subtotal.toFixed(2),
+            headerCategories: await model.getCategoriesDB(),
+            headerCart: headerCart,
+            taxRate: taxRate,
+            taxAmount: subtotal * taxRate,
+            total: subtotal * (1 + taxRate),
+            cartAccess: cartAccess,
+
+        });
+    }
+    else {
+        response.status(403).end();
+    }
 });
 
 app.get('/checkout', async (request, response) => {
-    let produits = await model.getCartListItemsByUserIdDB(request.query.user_id);
-    let subtotal = 0;
-    
-    for(let p of produits){
-        p.subtotal = p.price*p.quantity;
-        subtotal += p.subtotal;
-    }
 
-    response.render('checkout', {
-        titre: 'Checkout',
-        styles: ['/css/dropdown-menu.css'],
-        scripts: [], 
-        produits: produits,
-        subtotal: subtotal.toFixed(2),
-        headerCategories: await model.getCategoriesDB(),
-        headerCart: await serveur.headerCartMethode(),
-    });
+    let cartAccess = false;
+
+    if (request.user && request.user.access_id === 1) {
+        let headerCart;
+
+        cartAccess = true;
+
+        if (request.user) {
+            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        }
+        else {
+            headerCart = {
+                subtotal: '0.00',
+                number_of_items: '0',
+            }
+        }
+
+        let produits = await model.getCartListItemsByUserIdDB(request.query.user_id);
+        let subtotal = 0;
+
+
+        for (let p of produits) {
+            let productSubtotal = p.price * p.quantity;
+            p.subtotal = productSubtotal.toFixed(2);
+            subtotal += productSubtotal;
+        }
+        let taxAmount = subtotal * taxRate;
+        let total = subtotal * (1 + taxRate);
+
+        let user = await model.getUserByIdDB(2);
+
+        response.render('checkout', {
+            titre: 'Checkout',
+            styles: ['/css/dropdown-menu.css'],
+            scripts: ['/js/checkout.js'],
+            produits: produits,
+            subtotal: subtotal.toFixed(2),
+            headerCategories: await model.getCategoriesDB(),
+            headerCart: headerCart,
+            taxRate: taxRate,
+            taxAmount: taxAmount.toFixed(2),
+            total: total.toFixed(2),
+            user: user[0],
+            cartAccess: cartAccess,
+        });
+    }
+    else {
+        response.status(403).end();
+    }
 });
 
 //-------------------------------------APIs-------------------------------------------------
 
 app.patch('/api/update_cart', async (request, response) => {
-    let cart_id = await model.getCartIdByUserIdDB(2);
-    let productIdArray = request.body.product_id;
-    let quantityArray = request.body.quantity;
-    let isSelectedArray = [];
-    for(let selected of request.body.is_selected){
-        if(selected) isSelectedArray.push(1);
-        else isSelectedArray.push(0);
+    if (request.user && request.user.access_id === 1) {
+        console.log(request.body.product_ids);
+        console.log(request.body.is_selecteds);
+        console.log(request.body.quantities);
+
+        let cart_id = await model.getCartIdByUserIdDB(request.user.id);
+        let productIdArray = request.body.product_ids;
+        let quantityArray = request.body.quantities;
+        let isSelectedArray = [];
+        for (let selected of request.body.is_selecteds) {
+            if (selected) isSelectedArray.push(1);
+            else isSelectedArray.push(0);
+        }
+        for (let i = 0; i < productIdArray.length; i++) {
+            if (quantityArray[i] === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i])
+            else await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i], quantityArray[i], isSelectedArray[i]);
+        }
+        let produitsPanier = await model.getCartListItemsByUserIdDB(request.user.id);
+        let subtotal = 0;
+
+
+        for (let p of produitsPanier) {
+            let productSubtotal = p.price * p.quantity;
+            p.subtotal = productSubtotal.toFixed(2);
+            subtotal += productSubtotal;
+        }
+        produitsPanier.push({
+            subtotal: subtotal,
+            taxRate: taxRate,
+            total: subtotal*1+taxRate,
+        });
+
+        
+        response.status(201).json(produitsPanier).end();
     }
-    for(let i = 0; i < productIdArray.length; i++){
-        await model.updateCartItemsByProductIdAndCartIdDB(cart_id[0].id, productIdArray[i], quantityArray[i], isSelectedArray[i]);        
+    else {
+        response.status(403).end();
     }
-    response.status(201).end();
-    
+
+});
+
+app.post('/api/add_to_cart', async (request, response) => {
+
+    if(request.user === undefined){
+        response.status(403).end();
+    }
+    else if (request.user.access_id === 1) {
+        let cart_id = await model.getCartIdByUserIdDB(request.user.id);
+        let cartItems = await model.getCartListItemsByUserIdDB(2);
+        let add = true;
+
+        if (cartItems.length === 0) await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
+        else {
+            for (let item in cartItems) {
+                if (item.product_id === request.body.product_id) add = false;
+            }
+            if (!add) await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, request.body.product_id, request.body.quantity, 1);
+            else await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
+        }
+        let headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        
+
+        
+        response.status(201).json(headerCart).end();
+    }
+
+    else {
+        response.status(403).end();
+    }
+});
+
+//-----------------------------------Connexion/Deconnexion/Inscription---------------------------------------
+app.post('/inscription', async (request, response, next) => {
+    //valider les donner recu du client
+    if (/*validationInscription(request.body)*/true) {
+
+        try {
+            let user_id = await model.addUserBasicDB(request.body.email, request.body.password, request.body.prenom, request.body.nom);
+
+
+            let user = await model.getUserById(user_id);
+
+            response.status(201).end();
+            //response.pushJson(user, 'update-new-user');
+        }
+        catch (error) {
+            if (error.code === 'SQLITE_CONSTRAINT') {
+                response.status(409).end();
+            }
+            else {
+                next(error);
+            }
+        }
+    }
+    else {
+        response.status(400).end();
+    }
+});
+
+app.post('/connexion', (request, response, next) => {
+    //valider les donner recu du client
+    if (/*validationConnexion(request.body)*/ true) {
+        passport.authenticate('local', (error, email, info) => {
+            if (error) {
+                next(error);
+            }
+            else if (!email) {
+                response.status(401).json(info);
+            }
+            else {
+                request.logIn(email, (error) => {
+                    if (error) {
+                        next(error);
+                    }
+                    else {
+                        response.status(200).end();
+                    }
+                });
+            }
+        })(request, response, next);
+    }
+    else {
+        response.status(400).end();
+    }
+});
+
+app.post('/deconnexion', (request, response, next) => {
+    request.logOut((error) => {
+        if (error) {
+            next(error);
+        }
+        else {
+            response.redirect('/');
+        }
+    })
 });
 
 
@@ -147,4 +461,4 @@ app.use(function (request, response) {
 // Démarrage du serveur
 app.listen(process.env.PORT);
 console.info(`Serveurs démarré:`);
-console.info(`http://localhost:${ process.env.PORT }`);
+console.info(`http://localhost:${process.env.PORT}`);

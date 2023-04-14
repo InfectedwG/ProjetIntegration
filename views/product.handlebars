@@ -1,190 +1,165 @@
 <div class="container">
-    <section class="section-one row">
-        <div class="product-left col-5">
-            <div class="product-image">
-                <img src="product-image.jpg" alt="Product Image">
-                <div class="small-image-scroll">
-                    <img src="small-image1.jpg" alt="Small Image 1">
-                    <img src="small-image2.jpg" alt="Small Image 2">
-                    <img src="small-image3.jpg" alt="Small Image 3">
+    <section class="section-one row border-bottom">
+        {{#each produit}}
+        <div class="product-left col-4 py-3  d-block " id="imgs-container">
+
+            <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded" alt="..."
+                style="width: 325px; height: 325px; display: block" id="main-big-img">
+
+            <img src="/img/produits/{{this.id}}/secondary_1.jpg" class="img-thumbnail rounded" alt="..."
+                style="width: 325px; height: 325px; display: none" id="sec1-big-img">
+
+            <img src="/img/produits/{{this.id}}/secondary_2.jpg" class="img-thumbnail rounded" alt="..."
+                style="width: 325px; height: 325px; display: none" id="sec2-big-img">
+
+            <img src="/img/produits/{{this.id}}/secondary_3.jpg" class="img-thumbnail rounded" alt="..."
+                style="width: 325px; height: 325px; display: none" id="sec3-big-img">
+
+            <img src="/img/produits/{{this.id}}/secondary_4.jpg" class="img-thumbnail rounded" alt="..."
+                style="width: 325px; height: 325px; display: none" id="sec4-big-img">
+
+
+            <div style="border: 1px black solid;">
+                <span class="material-symbols-outlined nav-img-product" id="arrow-left">
+                    arrow_back_ios
+                </span>
+
+                <div id="pos-0" style="display: none;">
+                    <img src="/img/produits/{{this.id}}/main.jpg" alt=""
+                        style="width: 65px; height: 65px; display: inline" id="main-small-img">
                 </div>
+
+                <div id="pos-1" style="display: inline-block;">
+                    <img src="/img/produits/{{this.id}}/secondary_1.jpg" alt=""
+                        style="width: 65px; height: 65px; display: inline" id="sec1-small-img">
+                </div>
+
+                <div id="pos-2" style="display: inline-block;">
+                    <img src="/img/produits/{{this.id}}/secondary_2.jpg" alt=""
+                        style="width: 65px; height: 65px; display: inline" id="sec2-small-img">
+                </div>
+
+                <div id="pos-3" style="display: inline-block;">
+                    <img src="/img/produits/{{this.id}}/secondary_3.jpg" alt=""
+                        style="width: 65px; height: 65px; display: inline" id="sec3-small-img">
+                </div>
+
+                <div id="pos-4" style="display: inline-block;">
+                    <img src="/img/produits/{{this.id}}/secondary_4.jpg" alt=""
+                        style="width: 65px; height: 65px; display: inline" id="sec4-small-img">
+                </div>
+
+                <span class="material-symbols-outlined nav-img-product" id="arrow-right">
+                    arrow_forward_ios
+                </span>
+
             </div>
+
+
+
         </div>
 
-        <div class="product-right">
-            <h1 class="product-title">Product Title</h1>
-            <div class="product-price">$100.00</div>
+        <div class="product-right ">
+            <div class="border-bottom py-3">
+                <h1 class="product-title">{{this.name}}</h1>
+                <div class="product-price" id="product-price">${{this.price}}</div>
+            </div>
 
             <div class="product-features">
                 <h2>FEATURES AND BENEFITS</h2>
                 <ul>
-                    <li>Bullet point 1</li>
-                    <li>Bullet point 2</li>
-                    <li>Bullet point 3</li>
-                    <li>Bullet point 4</li>
+                    <li>{{this.features}}</li>
                 </ul>
             </div>
 
             <div class="smart-tip">
                 <h3 class="smart-tip-title">Smart Tip</h3>
-                <p class="smart-tip-description">Small description goes here</p>
+                <p class="smart-tip-description">{{this.smart_tips}}</p>
             </div>
 
             <div class="quantity">
-                <label for="qty">Qty:</label>
-                <select id="qty">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <button class="btn btn-primary">Add to Cart</button>
+                <label class="form-label" for="quantite">Quantité :</label>
+                <input class="col-form-label" type="number" id="quantity" name="quantite" value="1" min="1">
+                <button class="btn btn-primary mb-1" id="Cart-button" data-productid="{{this.id}}" {{#unless cartAccess}}disabled{{/unless}}>Add to Cart</button>
             </div>
 
             <div class="product-details">
                 <div class="product-column">
-                    <div class="product-code">Product Code: (code goes here)</div>
-                    <div class="availability">Availability: (In Stock)</div>
-                    <div class="categories">Categories: (interactive), (Toys)</div>
+                    <div class="product-code">
+                        <label for="codeproduct" class="form-label">Product Code: </label>
+                        <input class="form-control" id="product-code" type="text" value="{{this.code}}" disabled
+                            readonly>
+                    </div>
+                    <div class="availability">
+                        <label for="availability" class="form-label">Availability: </label>
+                        <input class="form-control" id="availability" type="text"
+                            value="{{#if this.availability}}In Stock{{else}}Not Available{{/if}}" disabled readonly>
+                    </div>
+                    {{/each}}
+                    <div class="categories">
+                        {{#each categorieproduit}}
+                        <label for="categories" class="form-label">Categories: </label>
+                        <input class="form-control" id="categories" type="text" value="{{this.name}}" disabled readonly>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
         </div>
+
     </section>
 
-    <section class="section-two row">
+    <section class="section-two row border-bottom py-3">
         <div class="container">
+            {{#each produit}}
             <div class="row">
                 <div class="tabs col-2">
-                    <div class="tab active" data-tab="description">Description</div>
-                    <div class="tab" data-tab="information">Information</div>
+                    <div class="tab active border-bottom" id="description">Description</div>
+                    <div class="tab" id="information">Information</div>
                 </div>
                 <div class="tab-content col">
-                    <div class="tab-panel active" data-tab="description">
-                        <p>This is the description.</p>
+                    <div class="tab-panel" id="description-content" style="display: block;">
+                        <p>{{this.description}}</p>
                     </div>
-                    <div class="tab-panel" data-tab="information">
-                        <p>This is the information.</p>
+                    <div class="tab-panel" id="information-content" style="display: none;">
+                        <p>{{this.info}}</p>
                     </div>
                 </div>
             </div>
+            {{/each}}
         </div>
     </section>
 
-    <section class="section-three row">
-        <div class="related-products">
-            <div class="row">
-                <h2>Related Products</h2>                
-            </div>
-            <div class="swiper-container">
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <!-- Product 1 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 2 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 3 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 4 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 5 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 6 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 7 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <!-- Product 8 content -->
-                        <div class="product-container">
-                            <a href="#">
-                                <img src="https://via.placeholder.com/150x150.png" alt="product-image">
-                            </a>
-                            <a href="#" class="product-id">####</a>
-                            <a href="#" class="product-name">Product Name</a>
-                            <p class="product-price">$9.99</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="container py-5 border-bottom">
 
-            </div>
+        <div class="InteractiveTitle">
+            <h2>Related Products</h2>
         </div>
-    </section>
+
+        <div class="row product-list">
+
+            {{#each pruductsbycategorie}}
+
+            <div class="col-4 products">
+                <button class="produits" id="{{this.id}}">
+                    <div class="product-container">
+                        <a href="#">
+                            <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded" style="width: 230px; height: 230px">
+                        </a>
+                        <a href="#" class="product-id">ID:{{this.code}}</a>
+                        <a href="#" class="product-name">#{{this.code}} {{this.name}}</a>
+                        <p class="product-price">${{this.price}}</p>
+                    </div>
+                </button>
+            </div>
+            {{/each}}
+        </div>
+
+
+
+    </div>
 </div>
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js" nonce="38db610ac4"></script>
-<script nonce="38db610ac4">
-    var swiper = new Swiper('.swiper-container', {
-        slidesPerView: 'auto',
-        spaceBetween: 1,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
-</script>
+
+
 <script nonce="38db610ac4">
     const tabs = document.querySelectorAll(".tab");
     const tabPanels = document.querySelectorAll(".tab-panel");

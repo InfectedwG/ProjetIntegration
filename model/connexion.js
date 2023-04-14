@@ -21,18 +21,20 @@ const createDatabase = async (connectionPromise) => {
         CREATE TABLE IF NOT EXISTS Products(
             id integer PRIMARY KEY autoincrement,
             name text NOT NULL unique,
+            code int not null unique,
             price real not null,
             category_id integer NOT NULL,
+            availability int not null,
             description text,
             smart_tips text,
             info text,
             features text,
-            img_name text,
             foreign key (category_id) references Categories(id));
                     
         CREATE TABLE IF NOT EXISTS Users(
             id integer primary key autoincrement,
-            name text not null,
+            first_name text not null,
+            last_name text not null,
             address text,
             city text,
             postal_code text,
@@ -69,7 +71,6 @@ const createDatabase = async (connectionPromise) => {
         CREATE TABLE IF NOT EXISTS Cart(
             id integer primary key autoincrement,
             user_id integer not null,
-            subtotal real not null,
             foreign key (user_id) references Users(user_id));
             
         CREATE TABLE IF NOT EXISTS Cart_Items(
@@ -84,9 +85,9 @@ const createDatabase = async (connectionPromise) => {
             ('user'),
             ('admin');
         
-        INSERT INTO Users (name, address, city, postal_code, province_state, country, email, password, access_id) values
-            ('Admin', null, null, null, null, null, 'admin@admin.com', 'admin', 2),
-            ('John Doe', '123 1st avenue', 'Ottawa', 'A1B 0C3', 'ON', 'Canada', 'john_doe@gmail.com', 'password', 1);
+        INSERT INTO Users (first_name, last_name, address, city, postal_code, province_state, country, email, password, access_id) values
+            ('Mr.', 'Admin', null, null, null, null, null, 'admin@admin.com', 'admin', 2),
+            ('John', 'Doe', '123 1st avenue', 'Ottawa', 'A1B 0C3', 'ON', 'Canada', 'john_doe@gmail.com', 'password', 1);
         
         INSERT INTO Categories (name, img_name) VALUES 
             ('Dog products', 'category_dog.png'),
@@ -98,34 +99,34 @@ const createDatabase = async (connectionPromise) => {
             ('Reptile products', 'category_reptile.png'),
             ('Wild bird products', null);
                     
-        INSERT INTO Products (name, price, category_id, description, smart_tips, info, features) 
-            VALUES  ('Pet bed', 29.99, 1, 'Comfortable and durable bed for your furry friend', 'Machine-washable cover', 
+        INSERT INTO Products (name, code, price, category_id, availability, description, smart_tips, info, features) 
+            VALUES  ('Pet bed', 3789, 29.99, 1, 1, 'Comfortable and durable bed for your furry friend', 'Machine-washable cover', 
                     'Dimensions: 24" x 18"', 'Soft and cozy material, easy to assemble'),
                     
-                    ('Cat scratching post', 15.99, 2, 'Helps keep your cat''s claws healthy and strong', 
+                    ('Cat scratching post', 7953, 15.99, 2, 1, 'Helps keep your cat''s claws healthy and strong', 
                     'Includes a dangling toy for added fun', 'Dimensions: 18" x 10" x 10"', 'Sturdy base, easy to assemble'),
                     
-                    ('Dog leash', 12.99, 3, 'Durable and strong leash for daily walks with your dog', 
+                    ('Dog leash', 5794, 12.99, 3, 1, 'Durable and strong leash for daily walks with your dog', 
                     'Reflective stitching for added safety at night', 'Length: 6 ft', 'Comfortable grip, available in multiple colors'),
                     
-                    ('Pet carrier', 39.99, 1, 'Convenient carrier for transporting your pet', 
+                    ('Pet carrier', 7839, 39.99, 1, 0, 'Convenient carrier for transporting your pet', 
                     'Ventilated sides for breathability', 'Dimensions: 18" x 12" x 12"', 'Removable fleece bed, easy to clean'),
                     
-                    ('Cat litter box', 24.99, 2, 'Easy-to-clean litter box for your cat', 
+                    ('Cat litter box', 4567, 24.99, 2, 1, 'Easy-to-clean litter box for your cat', 
                     'Includes a scoop and a filter', 'Dimensions: 16" x 12" x 5"', 'Sturdy and durable design, available in multiple colors'),
                     
-                    ('Dog food bowl', 8.99, 3, 'Non-slip bowl for your dog''s meals', 
+                    ('Dog food bowl', 8094, 8.99, 3, 0, 'Non-slip bowl for your dog''s meals', 
                     'Made of high-quality stainless steel', 'Diameter: 8"', 'Easy to clean, available in multiple sizes'),
                     
-                    ('Pet grooming brush', 9.99, 1, 'Gentle brush for grooming your pet''s fur', 
+                    ('Pet grooming brush', 5547, 9.99, 1, 1, 'Gentle brush for grooming your pet''s fur', 
                     'Helps remove loose hair and prevent matting', 'Dimensions: 6" x 3"', 'Comfortable grip, suitable for all coat types'),
                     
-                    ('Cat food dispenser', 19.99, 2, 'Automatic feeder for your cat''s meals', 
+                    ('Cat food dispenser', 9937, 19.99, 2, 1, 'Automatic feeder for your cat''s meals', 
                     'Programmable timer and portion control', 'Capacity: 4.5 lbs', 'Easy to clean, runs on batteries');
 
 
-        INSERT INTO Cart (user_id, subtotal)
-            VALUES (2, 0.00);
+        INSERT INTO Cart (user_id)
+            VALUES (2);
 
         INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
             VALUES  (1, 1, 1, 1),

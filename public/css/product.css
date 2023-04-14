@@ -78,6 +78,11 @@
     margin-bottom: 10px;
 }
 
+.btn-disabled {
+    background-color: gray;
+    width: 108px;
+}
+
 /*Section 2*/
 
 
@@ -201,4 +206,15 @@
 
 .swiper-container .swiper-button-next::after {
     content: "\2192";
+}
+
+
+
+.nav-img-product:hover{
+    cursor: default;
+}
+
+.produits{
+    background-color: white;
+    border: none;
 }
