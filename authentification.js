@@ -10,13 +10,15 @@ let config = {
 
 passport.use(new Strategy(config, async (email, password, done) => {
     try {
-        let user = await model.getUserByEmail(email);
+        let userLogin = await model.getUserByEmailDB(email);
 
-        if (!user) {
-            return done(null, false, { erreur: 'erreur_nom_utilisateur'});
+        let user = await model.getUserByEmailSession(email);
+
+        if (!userLogin) {
+            return done(null, false, { erreur: 'erreur_nom_utilisateur' });
         }
 
-        let valide = await compare(password, user.password);
+        let valide = await compare(password, userLogin.password);
 
         if (!valide) {
             return done(null, false, { erreur: 'erreur_mot_passe' });
@@ -31,7 +33,7 @@ passport.use(new Strategy(config, async (email, password, done) => {
 }));
 
 passport.serializeUser((user, done) => {
-    
+
     done(null, {
         user_id: user.id,
         email: user.email,
@@ -40,13 +42,13 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (user, done) => {
-     
+
     try {
-        let userTemp = await model.getUserByEmail(user.email);
+        let userTemp = await model.getUserByEmailDB(user.email);
         done(null, userTemp);
     }
     catch (error) {
         done(error);
-        
+
     }
 });

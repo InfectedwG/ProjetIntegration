@@ -22,12 +22,26 @@ export const addUserBasicDB = async (email, password, prenom, nom) => {
     return resultat.lastID;
 }
 
-export const getUserByEmail = async (email) => {
+export const getUserByEmailDB = async (email) => {
     let connexion = await connectionPromise;
 
     let user = await connexion.get(
         `
         select *
+        from Users
+        where email = ?
+        `, [email]
+    )
+
+    return user;
+}
+
+export const getUserByEmailSession = async (email) => {
+    let connexion = await connectionPromise;
+
+    let user = await connexion.get(
+        `
+        select id, first_name, last_name, address, city, postal_code, province_state, country, email, access_id
         from Users
         where email = ?
         `, [email]
@@ -234,7 +248,7 @@ export const getOrderDetailsByOrderIdDB = async (order_id) => {
 export const getUserByIdDB = async (user_id) => {
     let connexion = await connectionPromise;
 
-    let resultat = await connexion.all(
+    let resultat = await connexion.get(
         `
         select *
         from Users
@@ -242,31 +256,6 @@ export const getUserByIdDB = async (user_id) => {
         `, [user_id]
     );
     return resultat;
-}
-
-export const getUserByEmailDB = async (email) => {
-    let connexion = await connectionPromise;
-
-    let resultat = await connexion.all(
-        `
-        select *
-        from Users
-        where email = ?;
-        `, [email]
-    );
-    return resultat;
-}
-
-export const addUserDB = async (email, name, password) => {
-    let connexion = await connectionPromise;
-
-    let resultat = await connexion.run(
-        `
-        insert into Users(name, email, password)
-        values (?, ?, ?);
-        `, [name, email, password]
-    );
-    return resultat.lastID;
 }
 
 export const updateUserShippingInfoDB = async (user_id, address, city, postal_code, province_state, country) => {

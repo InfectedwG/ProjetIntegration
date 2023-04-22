@@ -276,7 +276,7 @@ app.get('/checkout', async (request, response) => {
             }
         }
 
-        let produits = await model.getCartListItemsByUserIdDB(request.query.user_id);
+        let produits = await model.getCartListItemsByUserIdDB(request.user.id);
         let subtotal = 0;
 
 
@@ -288,20 +288,24 @@ app.get('/checkout', async (request, response) => {
         let taxAmount = subtotal * taxRate;
         let total = subtotal * (1 + taxRate);
 
-        let user = await model.getUserByIdDB(2);
+        let country;
+
+        if(request.user.country == 'CA'){
+
+        }
 
         response.render('checkout', {
             titre: 'Checkout',
             styles: ['/css/dropdown-menu.css'],
             scripts: ['/js/checkout.js'],
-            produits: produits,
+            cartItems: produits,
             subtotal: subtotal.toFixed(2),
             headerCategories: await model.getCategoriesDB(),
             headerCart: headerCart,
             taxRate: taxRate,
             taxAmount: taxAmount.toFixed(2),
             total: total.toFixed(2),
-            user: user[0],
+            user: request.user,
             cartAccess: cartAccess,
         });
     }

@@ -25,14 +25,13 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label for="country" class="form-label">Country</label>
-                            <select class="form-select" id="country" required>
-                                <option value="">Choose...</option>
-                                <option>United States</option>
-                                <option >Canada</option>
-                            </select>
+                            <label for="check-usa" class="form-label">United States</label>
+                            <input type="checkbox" class="form-usa" id="check-usa">
+
+                            <label for="check-canada" class="form-label">Canada</label>
+                            <input type="checkbox" class="form-canada" id="check-canada">
                             <div class="invalid-feedback">
-                                Please select a valid country.
+                                Please select a country.
                             </div>
                         </div>
 
@@ -202,7 +201,7 @@
                         <th>Product</th>
                         <th>Subtotal</th>
                     </tr>
-                    {{#each produits}}
+                    {{#each cartItems}}
                     {{#if this.is_selected}}
                     <tr>
                         <td>{{this.name}} x {{this.quantity}}</td>
