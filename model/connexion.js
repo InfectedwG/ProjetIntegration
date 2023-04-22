@@ -140,7 +140,8 @@ const createDatabase = async (connectionPromise) => {
 
 
         INSERT INTO Cart (user_id)
-            VALUES (2);
+            VALUES  (2),
+                    (3);
 
         INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
             VALUES  (1, 1, 1, 1),

@@ -52,7 +52,8 @@ const taxRate = 0.14975;
 //-------------------------------------- Pages --------------------------------------------
 app.get('/', async (request, response) => {
 
-    
+
+
     let cartAccess = false;
 
     let headerCart;
@@ -67,7 +68,7 @@ app.get('/', async (request, response) => {
         }
     }
 
-    if(request.user && request.user.access_id === 1){
+    if (request.user && request.user.access_id === 1) {
         cartAccess = true;
     }
 
@@ -87,7 +88,7 @@ app.get('/login-signup', async (request, response) => {
 
     let cartAccess = false;
 
-    if(request.user && request.user.access_id === 1){
+    if (request.user && request.user.access_id === 1) {
         cartAccess = true;
     }
 
@@ -123,7 +124,7 @@ app.get('/category', async (request, response) => {
         }
     }
 
-    if(request.user && request.user.access_id === 1){
+    if (request.user && request.user.access_id === 1) {
         cartAccess = true;
     }
 
@@ -142,7 +143,7 @@ app.get('/category', async (request, response) => {
 
 
 app.get('/product', async (request, response) => {
-    
+
 
     let cartAccess = false;
 
@@ -158,9 +159,12 @@ app.get('/product', async (request, response) => {
         }
     }
 
-    if(request.user && request.user.access_id === 1){
+    if (request.user && request.user.access_id === 1) {
         cartAccess = true;
     }
+
+    console.log(request.user);
+    console.log(cartAccess);
 
     let productName = await model.getProductNameByIdDB(request.query.id_produit);
 
@@ -168,7 +172,7 @@ app.get('/product', async (request, response) => {
         titre: productName.name,
         styles: ['/css/product.css', '/css/dropdown-menu.css'],
         scripts: ['/js/product.js'],
-        categorieproduit: await model.getCategoryNameByProductId(request.query.id_produit),
+        categorieProduit: await model.getCategoryNameByProductId(request.query.id_produit),
         pruductsbycategorie: await model.getSameCategoryProductsByProductId(request.query.id_produit),
         produit: await model.getProductByIdDB(request.query.id_produit),
         headerCategories: await model.getCategoriesDB(),
@@ -178,13 +182,13 @@ app.get('/product', async (request, response) => {
 });
 
 app.get('/profile', async (request, response) => {
-    
+
     response.render('profile', {
         titre: "(profile de l'utilisateur)",
         styles: ['/css/profile.css'],
         scripts: ['/js/profile.js'],
-        
-        
+
+
     });
 });
 
@@ -204,7 +208,7 @@ app.get('/privacy-policy', async (request, response) => {
         }
     }
 
-    if(request.user && request.user.access_id === 1){
+    if (request.user && request.user.access_id === 1) {
         cartAccess = true;
     }
 
@@ -248,8 +252,6 @@ app.get('/panier', async (request, response) => {
             subtotal += productSubtotal;
         }
 
-        let orders = await model.blabla(request.user.id)
-
         response.render('panier', {
             titre: 'Panier',
             styles: ['/css/panier.css', '/css/dropdown-menu.css'],
@@ -289,27 +291,39 @@ app.get('/checkout', async (request, response) => {
             }
         }
 
-        let produits = await model.getCartListItemsByUserIdDB(request.user.id);
+        let cartItems = await model.getCartListItemsByUserIdDB(request.user.id);
+        let orderItems = [];
         let subtotal = 0;
 
 
-        for (let p of produits) {
-            let productSubtotal = p.price * p.quantity;
-            p.subtotal = productSubtotal.toFixed(2);
-            subtotal += productSubtotal;
+        for (let item of cartItems) {
+            if(item.is_selected){
+                let itemSubtotal = item.price * item.quantity;
+                item.subtotal = itemSubtotal.toFixed(2);
+                orderItems.push(item);                
+                subtotal += itemSubtotal;
+            }
         }
         let taxAmount = subtotal * taxRate;
         let total = subtotal * (1 + taxRate);
 
         // country is either canada or usa, nothing else
-        let country = false;
-        if(request.user.country == 'CA') country = true;
+        
+
+        let shippingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.shipping_address_id);
+        let billingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.billing_address_id);
+
+        let countryShipping = false;
+        if (shippingInfo.country == 'CA') country = true;
+
+        let countryBilling = false;
+        if (billingInfo.country == 'CA') country = true;
 
         response.render('checkout', {
             titre: 'Checkout',
             styles: ['/css/dropdown-menu.css'],
             scripts: ['/js/checkout.js'],
-            cartItems: produits,
+            orderItems: orderItems,
             subtotal: subtotal.toFixed(2),
             headerCategories: await model.getCategoriesDB(),
             headerCart: headerCart,
@@ -318,7 +332,10 @@ app.get('/checkout', async (request, response) => {
             total: total.toFixed(2),
             user: request.user,
             cartAccess: cartAccess,
-            country: country,
+            countryShipping: countryShipping,
+            countryBilling: countryBilling,
+            shipping_info: shippingInfo,
+            billing_info: billingInfo,
         });
     }
     else {
@@ -359,10 +376,10 @@ app.patch('/api/update_cart', async (request, response) => {
         produitsPanier.push({
             subtotal: subtotal,
             taxRate: taxRate,
-            total: subtotal*1+taxRate,
+            total: subtotal * 1 + taxRate,
         });
 
-        
+
         response.status(201).json(produitsPanier).end();
     }
     else {
@@ -373,7 +390,7 @@ app.patch('/api/update_cart', async (request, response) => {
 
 app.post('/api/add_to_cart', async (request, response) => {
 
-    if(request.user === undefined){
+    if (request.user === undefined) {
         response.status(403).end();
     }
     else if (request.user.access_id === 1) {
@@ -390,9 +407,9 @@ app.post('/api/add_to_cart', async (request, response) => {
             else await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
         }
         let headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
-        
 
-        
+
+
         response.status(201).json(headerCart).end();
     }
 
@@ -403,15 +420,41 @@ app.post('/api/add_to_cart', async (request, response) => {
 
 app.post('/api/place-order', async (request, response) => {
 
-    /**
-     * user_id
-     * subtotal
-     * date
-     * 
-     * order_id
-     * product_id
-     * quantity
-     */
+    if (request.user && request.user.access_id === 1) {
+        let cartItems = await model.getCartListItemsByUserIdDB(request.user.id);
+        let orderItems = [];
+        let subtotal;
+        let total;
+        let shippingFee;
+        
+        if(cartItems.length > 0){
+            for (let item in cartItems) {
+                if (item.is_selected) {
+                    orderItems.push(item);
+                    let itemSubtotal = item.price * item.quantity;
+                    subtotal += itemSubtotal;
+                }
+            }
+        }
+
+        total = (subtotal + shippingFee) * (taxRate + 1);
+        let today = new Date();
+        let todayEpoch = today.getTime();
+
+        if (orderItems.length > 0) {
+            let order_id = await model.placeOrderDB(request.user.id, 0.0, total, todayEpoch);
+            if (order_id) {
+                for (let item in orderItems) {
+                    await model.insertOrderDetailsDB(order_id, item.product_id, item.quantity);
+                }
+            }
+            else response.status(403).end();
+        }
+        else response.status(403).end();
+
+
+    }
+    else response.status(403).end();
 });
 
 //-----------------------------------Connexion/Deconnexion/Inscription---------------------------------------

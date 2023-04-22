@@ -114,7 +114,7 @@ export const getSameCategoryProductsByProductId = async (product_id) => {
 export const getCategoryNameByProductId = async (product_id) => {
     let connexion = await connectionPromise;
 
-    let resultat = await connexion.all(
+    let resultat = await connexion.get(
         `
         SELECT Categories.name
         FROM Categories 
@@ -122,8 +122,6 @@ export const getCategoryNameByProductId = async (product_id) => {
         ON Categories.id = Products.category_id 
         WHERE Products.id = ?;
         `, [product_id]
-
-
     );
 
     return resultat;
@@ -175,7 +173,7 @@ export const getCategoryNameByIdDB = async (category_id) => {
 export const getProductByIdDB = async (product_id) => {
     let connexion = await connectionPromise;
 
-    let resultat = await connexion.all(
+    let resultat = await connexion.get(
         `
         select *
         from Products
@@ -370,6 +368,20 @@ export const addProductInCartDB = async (cart_id, product_id, quantity, is_selec
 
     return resultat;
 
+}
+
+export const getAddressInfoByUserIdDB = async (user_id, address_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.get(
+        `
+        select a.*, u.id
+        from Addresses a
+        inner join Users u on u.id = a.user_id
+        where user_id = ? and a.id = ?
+        `,[user_id, address_id]
+    );
+    return resultat;
 }
 
 

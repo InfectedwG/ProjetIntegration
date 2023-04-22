@@ -1,21 +1,21 @@
 <div class="container">
     <section class="section-one row border-bottom">
-        {{#each produit}}
+        
         <div class="product-left col-4 py-3  d-block " id="imgs-container">
 
-            <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded" alt="..."
+            <img src="/img/produits/{{produit.id}}/main.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: block" id="main-big-img">
 
-            <img src="/img/produits/{{this.id}}/secondary_1.jpg" class="img-thumbnail rounded" alt="..."
+            <img src="/img/produits/{{produit.id}}/secondary_1.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: none" id="sec1-big-img">
 
-            <img src="/img/produits/{{this.id}}/secondary_2.jpg" class="img-thumbnail rounded" alt="..."
+            <img src="/img/produits/{{produit.id}}/secondary_2.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: none" id="sec2-big-img">
 
-            <img src="/img/produits/{{this.id}}/secondary_3.jpg" class="img-thumbnail rounded" alt="..."
+            <img src="/img/produits/{{produit.id}}/secondary_3.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: none" id="sec3-big-img">
 
-            <img src="/img/produits/{{this.id}}/secondary_4.jpg" class="img-thumbnail rounded" alt="..."
+            <img src="/img/produits/{{produit.id}}/secondary_4.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: none" id="sec4-big-img">
 
 
@@ -25,27 +25,27 @@
                 </span>
 
                 <div id="pos-0" style="display: none;">
-                    <img src="/img/produits/{{this.id}}/main.jpg" alt=""
+                    <img src="/img/produits/{{produit.id}}/main.jpg" alt=""
                         style="width: 65px; height: 65px; display: inline" id="main-small-img">
                 </div>
 
                 <div id="pos-1" style="display: inline-block;">
-                    <img src="/img/produits/{{this.id}}/secondary_1.jpg" alt=""
+                    <img src="/img/produits/{{produit.id}}/secondary_1.jpg" alt=""
                         style="width: 65px; height: 65px; display: inline" id="sec1-small-img">
                 </div>
 
                 <div id="pos-2" style="display: inline-block;">
-                    <img src="/img/produits/{{this.id}}/secondary_2.jpg" alt=""
+                    <img src="/img/produits/{{produit.id}}/secondary_2.jpg" alt=""
                         style="width: 65px; height: 65px; display: inline" id="sec2-small-img">
                 </div>
 
                 <div id="pos-3" style="display: inline-block;">
-                    <img src="/img/produits/{{this.id}}/secondary_3.jpg" alt=""
+                    <img src="/img/produits/{{produit.id}}/secondary_3.jpg" alt=""
                         style="width: 65px; height: 65px; display: inline" id="sec3-small-img">
                 </div>
 
                 <div id="pos-4" style="display: inline-block;">
-                    <img src="/img/produits/{{this.id}}/secondary_4.jpg" alt=""
+                    <img src="/img/produits/{{produit.id}}/secondary_4.jpg" alt=""
                         style="width: 65px; height: 65px; display: inline" id="sec4-small-img">
                 </div>
 
@@ -61,46 +61,46 @@
 
         <div class="product-right col-5 py-3 ml-5 d-block border-left ">
             <div class="border-bottom py-3">
-                <h1 class="product-title">{{this.name}}</h1>
-                <div class="product-price" id="product-price">${{this.price}}</div>
+                <h1 class="product-title">{{produit.name}}</h1>
+                <div class="product-price" id="product-price">${{produit.price}}</div>
             </div>
 
             <div class="product-features">
                 <h2>FEATURES AND BENEFITS</h2>
                 <ul>
-                    <li>{{this.features}}</li>
+                    <li>{{produit.features}}</li>
                 </ul>
             </div>
 
             <div class="smart-tip">
                 <h3 class="smart-tip-title">Smart Tip</h3>
-                <p class="smart-tip-description">{{this.smart_tips}}</p>
+                <p class="smart-tip-description">{{produit.smart_tips}}</p>
             </div>
 
             <div class="quantity">
                 <label class="form-label" for="quantite">Quantité :</label>
                 <input class="col-form-label" type="number" id="quantity" name="quantite" value="1" min="1">
-                <button class="btn btn-primary mb-1" id="Cart-button" data-productid="{{this.id}}" {{#unless cartAccess}}disabled{{/unless}}>Add to Cart</button>
+                <button class="btn btn-primary mb-1" id="Cart-button" data-productid="{{produit.id}}" {{#unless cartAccess}}disabled{{/unless}}>Add to Cart</button>
             </div>
 
             <div class="product-details">
                 <div class="product-column">
                     <div class="product-code">
                         <label for="codeproduct" class="form-label">Product Code: </label>
-                        <input class="form-control" id="product-code" type="text" value="{{this.code}}" disabled
+                        <input class="form-control" id="product-code" type="text" value="{{produit.code}}" disabled
                             readonly>
                     </div>
                     <div class="availability">
                         <label for="availability" class="form-label">Availability: </label>
                         <input class="form-control" id="availability" type="text"
-                            value="{{#if this.availability}}In Stock{{else}}Not Available{{/if}}" disabled readonly>
+                            value="{{#if produit.availability}}In Stock{{else}}Not Available{{/if}}" disabled readonly>
                     </div>
-                    {{/each}}
+                    
                     <div class="categories">
-                        {{#each categorieproduit}}
+                        
                         <label for="categories" class="form-label">Categories: </label>
-                        <input class="form-control" id="categories" type="text" value="{{this.name}}" disabled readonly>
-                        {{/each}}
+                        <input class="form-control" id="categories" type="text" value="{{categorieProduit.name}}" disabled readonly>
+                        
                     </div>
                 </div>
             </div>
@@ -158,23 +158,3 @@
 
     </div>
 </div>
-
-
-<script nonce="38db610ac4">
-    const tabs = document.querySelectorAll(".tab");
-    const tabPanels = document.querySelectorAll(".tab-panel");
-
-    tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-            const activeTab = document.querySelector(".active");
-            activeTab.classList.remove("active");
-            this.classList.add("active");
-
-            const activePanel = document.querySelector(".tab-panel.active");
-            activePanel.classList.remove("active");
-
-            const tabPanel = document.querySelector(`[data-tab="${this.dataset.tab}"]`);
-            tabPanel.classList.add("active");
-        });
-    });
-</script>
