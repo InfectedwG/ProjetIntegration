@@ -1,0 +1,287 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    box-shadow: 0 4px 2px -2px gray;
+}
+
+header img {
+    height: -webkit-fill-available;
+    width: auto;
+}
+
+.headul {
+    list-style: none;
+    display: flex;
+}
+
+.w100 {
+    width: 100%;
+}
+
+
+
+.w30 {
+    width: 30%;
+}
+
+.w70 {
+    width: 70%;
+}
+
+.headul li {
+    display: inline;
+    margin: 0px 10px;
+    width: max-content;
+    display: flex;
+}
+
+.headul li p {
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+}
+
+.table {
+    display: table;
+}
+
+.left {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.right {
+    margin-left: auto;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.iconuser {
+    font-size: 24px;
+    margin: auto;
+    cursor: pointer;
+}
+
+.shop {
+    padding: 0px 10px;
+    cursor: pointer;
+    border-radius: 10%;
+    color: white;
+    background-color: orange;
+}
+
+.shopping {
+    margin: auto;
+}
+
+.shopping i {
+    font-size: 24px;
+}
+
+.shopping p {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+.shoppinginfo {
+    padding: 30px;
+    min-width: min-content;
+    width: 300px;
+    max-width: max-content;
+    border: solid 1px black;
+}
+
+
+
+.colorblue {
+    color: blue;
+    font-size: large;
+    margin-top: 10px;
+    font-weight: 900;
+}
+
+.space0 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.space {
+    max-width: 20px 0px;
+    font-weight: 600;
+}
+
+.spacer{
+    padding: 10px;
+}
+
+table,
+td,
+th {
+    border: 1px solid;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.padspace {
+    padding: 0px 30px;
+}
+
+table tr td p{
+    text-align: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+table tr td img{
+    margin: auto;
+    text-align: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+table tr td input{
+    margin: auto;
+    text-align: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.black{
+    background-color: black;
+    color: white;
+}
+
+.grey{
+    background-color: gray;
+    color: white;
+}
+
+.padding10{
+    padding: 10px;
+}
+
+.lastbtn{
+    margin-right: 15px;
+}
+
+.red{
+    color: red;
+}
+.red i{
+    cursor: pointer;
+    text-align: center;
+}
+
+.w50{
+    width: 50%;
+}
+
+.orange{
+    color: orange;
+}
+.blue{
+    color: blue;
+}
+
+.table22 td{
+    border: 0px;
+}
+
+.table22 td p{
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.checkbtn{
+    margin-top: 5px;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+
+
+
+.padding5-0{
+    padding: 5px 0px;
+}
+
+
+
+/* Couleur de fond pour l'ensemble de l'accordéon */
+.accordion {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* Style de l'en-tête de chaque élément de l'accordéon */
+  .accordion-header {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style du bouton pour ouvrir/fermer chaque élément */
+  .accordion-button {
+    color: #444;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Style pour le contenu de chaque élément de l'accordéon */
+  .accordion-body {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Style pour le contenu actif (ouvert) de chaque élément de l'accordéon */
+  .accordion-item.show .accordion-button {
+    color: #007bff;
+  }
+  
+  .accordion-item.show .accordion-body {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  @media (max-width: 767.98px) {
+    /* Style pour les écrans de petite taille */
+    .accordion-header {
+      font-size: 16px;
+      padding: 12px;
+    }
+    
+    .accordion-button {
+      font-size: 16px;
+    }
+    
+    .accordion-body {
+      font-size: 14px;
+      padding: 16px;
+    }
+  }
+  
+  
+  

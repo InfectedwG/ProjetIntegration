@@ -1,0 +1,153 @@
+<div class="container">
+    <section class="section-one row border-bottom">
+
+        <div class="product-left col-4 py-3 ml-4  d-block ">
+
+            <h1 class="h1 mb-3">Informations</h1>
+            <div>
+                <div class="text-center mb-3">
+                    <img src="/img/user.avif" class="img-thumbnail rounded" alt="...">
+                </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Nom : Jean
+                    </li>
+                    <li class="list-group-item">
+                        prenom : Desjardins
+                    </li>
+                    <li class="list-group-item">
+                        Adresse : adresse line, ville, province, pays Code Postale
+                    </li>
+                    <li class="list-group-item">
+                        Adresse Email : aaa@aa.aa
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+        <div class="product-right col-5 py-3 ml-5 d-block border-left">
+            <h1 class="h1 mb-3">Update Information</h1>
+
+            <form>
+
+                <div class="mb-3">
+                    <label for="InputNom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="InputNom">
+                </div>
+                <div class="mb-3">
+                    <label for="InputPrenom" class="form-label">Prenom</label>
+                    <input type="text" class="form-control" id="InputPrenom">
+                </div>
+                <div class="mb-3">
+                    <label for="InputEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="InputPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="PasswordHelp">
+                    <div id="PasswordHelp" class="form-text">Must be 8-20 characters long.</div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label for="InputAdresse" class="form-label">Adresse</label>
+                    <input type="text" class="form-control" id="InputAdresse">
+                </div>
+                <div class="mb-3">
+                    <label for="InputVille" class="form-label">Ville</label>
+                    <input type="text" class="form-control" id="InputVille">
+                </div>
+                <div class="mb-3">
+                    <label for="InputProvince" class="form-label">Province</label>
+                    <input type="text" class="form-control" id="InputProvince">
+                </div>
+                <div class="mb-3">
+                    <label for="InputPays" class="form-label">Pays</label>
+                    <input type="text" class="form-control" id="InputPays">
+                </div>
+                <div class="mb-3">
+                    <label for="InputCodePostale" class="form-label">Code Postale</label>
+                    <input type="text" class="form-control" id="InputCodePostale">
+                </div>
+
+
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+
+
+    </section>
+
+
+
+
+    <section class="mb-3 mt-3 section-two row border-botto flex shoppingpart">
+
+
+
+        <div class="grid w100">
+
+            <div class="padspace">
+                <h1 class="h1 mb-3">Liste des commandes</h1>
+                <!-- Code HTML de l'accordéon -->
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Commande #1 - Date : 21/04/2023 - Utilisateur : John Doe - Total : 50€
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src="path/to/product1.jpg" alt="Product 1" class="img-fluid">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3>Product 1</h3>
+                                        <p>Quantity: 2</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p>Total: 30€</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <img src="path/to/product2.jpg" alt="Product 2" class="img-fluid">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3>Product 2</h3>
+                                        <p>Quantity: 1</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p>Total: 20€</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+    </section>
+</div>
+
+<!-- Script pour activer l'accordéon -->
+<script>
+    $(document).ready(function () {
+        $('.accordion-button').click(function () {
+            var $collapse = $(this).closest('.accordion-header').next('.accordion-collapse');
+            $collapse.collapse('toggle');
+        });
+    });
+</script>
