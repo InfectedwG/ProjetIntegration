@@ -177,6 +177,17 @@ app.get('/product', async (request, response) => {
     });
 });
 
+app.get('/profile', async (request, response) => {
+    
+    response.render('profile', {
+        titre: "(profile de l'utilisateur)",
+        styles: ['/css/profile.css'],
+        scripts: ['/js/profile.js'],
+        
+        
+    });
+});
+
 app.get('/privacy-policy', async (request, response) => {
 
     let cartAccess = false;
