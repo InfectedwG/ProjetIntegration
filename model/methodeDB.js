@@ -66,6 +66,21 @@ export const getUserById = async (user_id) => {
     return user;
 }
 
+export const getAdresseById = async (user_id) => {
+    let connexion = await connectionPromise;
+
+    let adresse = await connexion.get(
+        `
+        SELECT u.id, u.first_name, u.last_name, u.email, a.street_address, a.appartment, a.city, a.postal_code, a.province_state, a.country
+        FROM Users u
+        JOIN Addresses a ON u.shipping_address_id = a.id
+        WHERE u.id  = ?
+        `, [user_id]
+    )
+
+    return adresse;
+}
+
 export const getAllUser = async () => {
     let connexion = await connectionPromise;
 
@@ -104,7 +119,7 @@ export const getSameCategoryProductsByProductId = async (product_id) => {
         `, [product_id]
 
 
-    
+
 
     );
 
@@ -364,7 +379,7 @@ export const addProductInCartDB = async (cart_id, product_id, quantity, is_selec
         INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
         values (?, ?, ?, ?)
         `
-        ,[cart_id, product_id, quantity, is_selected]
+        , [cart_id, product_id, quantity, is_selected]
 
     );
 
@@ -395,4 +410,106 @@ export const runGabaritDB = async () => {
     );
     return resultat.lastID;
 }
+
+
+export const updateUser = async (user_id, first_name, last_name, email, street_address, appartment, city, postal_code, province_state, country) => {
+    let connexion = await connectionPromise;
+
+    // Hash le mot de passe si une nouvelle valeur est fournie
+    //let passwordHashed = password ? await hash(password, 10) : undefined;
+
+    // Récupère l'ID de l'adresse d'expédition de l'utilisateur
+    let shippingAddress = await connexion.get(
+        `
+        select shipping_address_id
+        from Users
+        where id = ?
+        `, [user_id]
+    );
+
+
+
+    // Met à jour l'adresse d'expédition de l'utilisateur
+    if (shippingAddress) {
+        await connexion.run(
+            `
+            update Addresses
+            set street_address = ?,
+                appartment = ?,
+                city = ?,
+                postal_code = ?,
+                province_state = ?,
+                country = ?
+            where id = ?
+            `, [street_address, appartment, city, postal_code, province_state, country, shippingAddress.shipping_address_id]
+        );
+    }
+
+    // Met à jour les informations de base de l'utilisateur
+    await connexion.run(
+        `
+        update Users
+        set first_name = ?,
+            last_name = ?,
+            email = ?
+            
+        where id = ?
+        `, [first_name, last_name, email, user_id]
+    );
+}
+
+
+export const updateUserPassword = async (user_id, password) => {
+    let connexion = await connectionPromise;
+
+    // Hash le mot de passe si une nouvelle valeur est fournie
+    let passwordHashed = password ? await hash(password, 10) : undefined;
+
+    // Met à jour le mot de passe de l'utilisateur
+    await connexion.run(
+        `
+        update Users
+        set password = ?
+        where id = ?
+        `, [passwordHashed, user_id]
+    );
+}
+
+
+export const getAllCommands = async (user_id) => {
+    let connexion = await connectionPromise;
+  
+    // Récupère les commandes de l'utilisateur avec son nom
+    const rows = await connexion.all(`
+      SELECT Orders.id, Orders.total, Orders.date, Users.first_name, Users.last_name
+      FROM Orders
+      JOIN Users ON Orders.user_id = Users.id
+      WHERE Orders.user_id = ?;
+    `, [user_id]);
+  
+    console.log(rows);
+  
+    return rows;
+  }
+  
+
+  export const getOrderProducts = async (user_id) => {
+    let connexion = await connectionPromise;
+
+    const rows = await connexion.all(`
+        SELECT Order_Product.product_id , Products.name, Order_Product.quantity, Products.price, Products.code
+        FROM Order_Product 
+        JOIN Products ON Order_Product.product_id = products.id
+        JOIN Orders ON Order_Product.order_id = Orders.id 
+        WHERE Orders.user_id = ?;
+    `, [user_id]);
+
+    console.log(rows);
+
+    return rows;
+}
+
+
+
+
 
