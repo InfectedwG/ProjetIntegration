@@ -18,10 +18,19 @@ const createDatabase = async (connectionPromise) => {
 
     await connection.exec(
         `
+        CREATE TABLE IF NOT EXISTS Addresses(
+            id integer primary key autoincrement,
+            street_address text not null,
+            appartment text,
+            city text not null,
+            postal_code text not null,
+            province_state text not null,
+            country text not null);
+
         CREATE TABLE IF NOT EXISTS Products(
             id integer PRIMARY KEY autoincrement,
             name text NOT NULL unique,
-            code int not null unique,
+            code integer not null unique,
             price real not null,
             category_id integer NOT NULL,
             availability int not null,
@@ -34,17 +43,16 @@ const createDatabase = async (connectionPromise) => {
         CREATE TABLE IF NOT EXISTS Users(
             id integer primary key autoincrement,
             first_name text not null,
-            last_name text not null,
-            address text,
-            city text,
-            postal_code text,
-            province_state text,
-            country text,
+            last_name text not null,            
             email text not null unique,
             password text not null,
+            billing_address_id integer,
+            shipping_address_id integer,
             access_id integer not null,
-            foreign key (access_id) references Access(id));
-        
+            foreign key (access_id) references Access(id),
+            foreign key (billing_address_id) references Addresses(id),
+            foreign key (shipping_address_id) references Addresses(id));
+
         CREATE TABLE IF NOT EXISTS Access(
             id integer primary key,
             type text not null);
@@ -57,7 +65,8 @@ const createDatabase = async (connectionPromise) => {
         CREATE TABLE IF NOT EXISTS Orders(
             id integer primary key autoincrement,
             user_id integer not null,
-            subtotal real not null,
+            shipping_fee real not null,
+            total real not null,
             date integer not null,
             foreign key (user_id) references Users(user_id));
         
@@ -85,9 +94,14 @@ const createDatabase = async (connectionPromise) => {
             ('user'),
             ('admin');
         
-        INSERT INTO Users (first_name, last_name, address, city, postal_code, province_state, country, email, password, access_id) values
-            ('Mr.', 'Admin', null, null, null, null, null, 'admin@admin.com', 'admin', 2),
-            ('John', 'Doe', '123 1st avenue', 'Ottawa', 'A1B 0C3', 'ON', 'Canada', 'john_doe@gmail.com', 'password', 1);
+        INSERT INTO Addresses (street_address, appartment, city, postal_code, province_state, country)
+        VALUES  ('456 6th avenue', NULL, 'Gatineau', 'J8E 8G1', 'QC', 'CA'),
+                ('123 1st avenue', NULL, 'Ottawa', 'A1B 0C3', 'ON', 'CA');
+        
+        INSERT INTO Users (first_name, last_name, email, password, billing_address_id, shipping_address_id, access_id) values
+            ('Mr.', 'Admin', 'admin@admin.com', 'admin', NULL, NULL, 2),
+            ('John', 'Doe', 'john_doe@gmail.com', 'password', 2, 2, 1),
+            ('test', 'user', 'test@test.com', '$2b$10$NFCbJqHCyt2o0zcDwkaOnOvvSVI7l7TK5xJofL05eUGvLjQeYzXma', 1, 1, 1);
         
         INSERT INTO Categories (name, img_name) VALUES 
             ('Dog products', 'category_dog.png'),

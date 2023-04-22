@@ -12,6 +12,7 @@ export const addUserBasicDB = async (email, password, prenom, nom) => {
         values(?, ?, ?, ?, 1)
         `, [prenom, nom, email, passwordHashed]
     );
+
     await connexion.run(
         `
         insert into Cart(user_id)
@@ -41,7 +42,7 @@ export const getUserByEmailSession = async (email) => {
 
     let user = await connexion.get(
         `
-        select id, first_name, last_name, address, city, postal_code, province_state, country, email, access_id
+        select id, first_name, last_name, email, billing_address_id, shipping_address_id, access_id
         from Users
         where email = ?
         `, [email]
@@ -274,6 +275,32 @@ export const updateUserShippingInfoDB = async (user_id, address, city, postal_co
     );
     return resultat.lastID;
 }
+
+export const placeOrderDB = async (user_id, shipping_fee, total, date) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+        `
+        insert into Orders(user_id, shipping_fee, total, date)
+        values (?, ?, ?, ?)
+        `, [user_id, shipping_fee, total, date]
+    );
+    return resultat.lastID;
+}
+
+export const insertOrderDetailsDB = async (order_id, product_id, quantity) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+        `
+        insert into Order_Product(order_id, product_id, quantity)
+        values(?, ?, ?)
+        `, [order_id, product_id, quantity]
+    );
+    return resultat.lastID;
+}
+
+
 
 export const changeUserAccessDB = async (user_id, access_id) => {
     let connexion = await connectionPromise;

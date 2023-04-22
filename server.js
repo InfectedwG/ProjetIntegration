@@ -237,6 +237,8 @@ app.get('/panier', async (request, response) => {
             subtotal += productSubtotal;
         }
 
+        let orders = await model.blabla(request.user.id)
+
         response.render('panier', {
             titre: 'Panier',
             styles: ['/css/panier.css', '/css/dropdown-menu.css'],
@@ -288,11 +290,9 @@ app.get('/checkout', async (request, response) => {
         let taxAmount = subtotal * taxRate;
         let total = subtotal * (1 + taxRate);
 
-        let country;
-
-        if(request.user.country == 'CA'){
-
-        }
+        // country is either canada or usa, nothing else
+        let country = false;
+        if(request.user.country == 'CA') country = true;
 
         response.render('checkout', {
             titre: 'Checkout',
@@ -307,6 +307,7 @@ app.get('/checkout', async (request, response) => {
             total: total.toFixed(2),
             user: request.user,
             cartAccess: cartAccess,
+            country: country,
         });
     }
     else {
@@ -331,12 +332,13 @@ app.patch('/api/update_cart', async (request, response) => {
             else isSelectedArray.push(0);
         }
         for (let i = 0; i < productIdArray.length; i++) {
-            if (quantityArray[i] === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i])
+
+            if (quantityArray[i] === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i]);
+
             else await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i], quantityArray[i], isSelectedArray[i]);
         }
         let produitsPanier = await model.getCartListItemsByUserIdDB(request.user.id);
         let subtotal = 0;
-
 
         for (let p of produitsPanier) {
             let productSubtotal = p.price * p.quantity;
@@ -386,6 +388,19 @@ app.post('/api/add_to_cart', async (request, response) => {
     else {
         response.status(403).end();
     }
+});
+
+app.post('/api/place-order', async (request, response) => {
+
+    /**
+     * user_id
+     * subtotal
+     * date
+     * 
+     * order_id
+     * product_id
+     * quantity
+     */
 });
 
 //-----------------------------------Connexion/Deconnexion/Inscription---------------------------------------

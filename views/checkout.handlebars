@@ -5,12 +5,13 @@
         <div class="row g-5">
 
             <div class="col-md-6">
-                <h4 class="mb-3 text-primary">Billing details</h4>
+                <h4 class="mb-3 text-primary">Shipping details</h4>
                 <form class="needs-validation" novalidate="">
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="{{user.first_name}}" required>
+                            <input type="text" class="form-control" id="firstame-ship" placeholder=""
+                                value="{{user.first_name}}" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -18,18 +19,22 @@
 
                         <div class="col-sm-6">
                             <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="{{user.last_name}}" required>
+                            <input type="text" class="form-control" id="lastname-ship" placeholder=""
+                                value="{{user.last_name}}" required>
                             <div class="invalid-feedback">
                                 Valid last name is required.
                             </div>
                         </div>
 
                         <div class="col-md-12">
+
                             <label for="check-usa" class="form-label">United States</label>
-                            <input type="checkbox" class="form-usa" id="check-usa">
+                            <input type="checkbox" class="form-usa" id="check-usa-ship" {{#unless
+                                country}}checked{{/unless}}>
 
                             <label for="check-canada" class="form-label">Canada</label>
-                            <input type="checkbox" class="form-canada" id="check-canada">
+                            <input type="checkbox" class="form-canada" id="check-canada-ship" {{#if
+                                country}}checked{{/if}}>
                             <div class="invalid-feedback">
                                 Please select a country.
                             </div>
@@ -37,19 +42,22 @@
 
                         <div class="col-12">
                             <label for="address" class="form-label">Street Address</label>
-                            <input type="text" class="form-control" id="address" placeholder="Votre adresse" required value="{{user.address}}">
+                            <input type="text" class="form-control" id="address-ship" placeholder="Votre adresse"
+                                required value="{{user.address}}">
                             <div class="invalid-feedback">
                                 Please enter your shipping address.
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+                            <input type="text" class="form-control" id="appartment-ship"
+                                placeholder="Apartment or suite">
                         </div>
 
                         <div class="col-12">
                             <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control" id="city" placeholder="Ville" required value="{{user.city}}">
+                            <input type="text" class="form-control" id="city-ship" placeholder="Ville" required
+                                value="{{user.city}}">
                             <div class="invalid-feedback">
                                 Please enter your city.
                             </div>
@@ -57,7 +65,8 @@
 
                         <div class="col-md-12">
                             <label for="state" class="form-label">State/Province</label>
-                            <input type="text" class="form-control" id="province" placeholder="ON" value="{{user.province_state}}" required>
+                            <input type="text" class="form-control" id="province-ship" placeholder="ON"
+                                value="{{user.province_state}}" required>
                             <div class="invalid-feedback">
                                 Please provide a valid state or province.
                             </div>
@@ -65,7 +74,8 @@
 
                         <div class="col-md-12">
                             <label for="zip" class="form-label">Zip Code/Postal code</label>
-                            <input type="text" class="form-control" id="zip" placeholder="Code Postal" required value="{{user.postal_code}}">
+                            <input type="text" class="form-control" id="zipcode-ship" placeholder="Code Postal" required
+                                value="{{user.postal_code}}">
                             <div class="invalid-feedback">
                                 Zip code required.
                             </div>
@@ -74,7 +84,7 @@
                         <div class="col-12">
                             <label for="phone" class="form-label">Phone</label>
                             <div class="input-group has-validation">
-                                <input type="text" class="form-control" id="phone" placeholder="" required>
+                                <input type="text" class="form-control" id="phone-ship" placeholder="" required>
                                 <div class="invalid-feedback">
                                     Your phone is required.
                                 </div>
@@ -82,25 +92,11 @@
                         </div>
 
                         <div class="col-12">
-                            <label for="email" class="form-label">Email <span
-                                    class="text-muted">(Optional)</span></label>
-                            <input type="email" class="form-control" id="email" placeholder="yourname@example.ca" value="{{user.email}}">
-                            <div class="invalid-feedback">
-                                Please enter a valid email address for shipping updates.
+                            <label for="notes" class="form-label">Other Notes</label>
+                            <div class="input-group has-validation">
+                                <textarea name="notes" class="form-control" id="delivery-notes" cols="30" rows="3"></textarea>
                             </div>
                         </div>
-
-
-
-
-                    </div>
-
-                    <hr class="my-4">
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="same-address">
-                        <label class="form-check-label" for="same-address">Shipping address is the same as my billing
-                            address</label>
                     </div>
 
                     <div class="form-check">
@@ -108,86 +104,91 @@
                         <label class="form-check-label" for="save-info">Save this information for next time</label>
                     </div>
 
-
+                    <hr class="my-4">
                 </form>
             </div>
 
             <div class="col-md-6">
-                <h4 class="mb-3 text-primary"><input type="checkbox"> Ship to a different address ?</h4>
-                <form class="needs-validation" novalidate="" aria-disabled="true">
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                            <div class="invalid-feedback">
-                                Valid first name is required.
+                <h4 class="mb-3 text-primary"><input type="checkbox" id="checkbox-different"> Bill a different address ?
+                </h4>
+                <form class="needs-validation" novalidate="">
+                    <fieldset id="different-address">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="firstName-bill"
+                                    placeholder="Your First Name" value="{{user.first_name}}" required="">
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-sm-6">
-                            <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-                            <div class="invalid-feedback">
-                                Valid last name is required.
+                            <div class="col-sm-6">
+                                <label for="lastName" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastName-bill" placeholder="Your Last Name"
+                                    value="{{user.last_name}}" required="">
+                                <div class="invalid-feedback">
+                                    Valid last name is required.
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-12">
-                            <label for="country" class="form-label">Country</label>
-                            <select class="form-select" id="country" required="">
-                                <option value="">Choose...</option>
-                                <option>United States</option>
-                                <option>Canada</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please select a valid country.
+                            <div class="col-md-12">
+                                <label for="check-usa" class="form-label">United States</label>
+                                <input type="checkbox" class="form-usa" id="check-usa-bill" {{#unless
+                                    country}}checked{{/unless}}>
+
+                                <label for="check-canada" class="form-label">Canada</label>
+                                <input type="checkbox" class="form-canada" id="check-canada-bill" {{#if
+                                    country}}checked{{/if}}>
+                                <div class="invalid-feedback">
+                                    Please select a country.
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-12">
-                            <label for="address" class="form-label">Street Address</label>
-                            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-                            <div class="invalid-feedback">
-                                Please enter your shipping address.
+                            <div class="col-12">
+                                <label for="address" class="form-label">Street Address</label>
+                                <input type="text" class="form-control" id="address-bill" placeholder="1234 Main St"
+                                    required="">
+                                <div class="invalid-feedback">
+                                    Please enter your shipping address.
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-12">
-                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="state" class="form-label">State</label>
-                            <select class="form-select" id="state" required="">
-                                <option value="">Choose...</option>
-                                <option>California</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please provide a valid state.
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="appartment-bill"
+                                    placeholder="Apartment or suite">
                             </div>
-                        </div>
 
-                        <div class="col-md-12">
-                            <label for="zip" class="form-label">Zip Code</label>
-                            <input type="text" class="form-control" id="zip" placeholder="" required="">
-                            <div class="invalid-feedback">
-                                Zip code required.
+                            <div class="col-12">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" class="form-control" id="city-bill" placeholder="Ville" required
+                                    value="{{user.city}}">
+                                <div class="invalid-feedback">
+                                    Please enter your city.
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-12">
-                            <label for="phone" class="form-label">Other Notes</label>
-                            <div class="input-group has-validation">
-                                <textarea name="notes" class="form-control" id="" cols="30" rows="3"></textarea>
+                            <div class="col-md-12">
+                                <label for="state" class="form-label">State/Province</label>
+                                <input type="text" class="form-control" id="province-bill" placeholder="ontario"
+                                    value="{{user.province_state}}" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid state or province.
+                                </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <label for="zip" class="form-label">Zip Code/Postal Code</label>
+                                <input type="text" class="form-control" id="zipcode-bill" placeholder="Your postal code"
+                                    required="">
+                                <div class="invalid-feedback">
+                                    Zip code required.
+                                </div>
+                            </div>
+
+
                         </div>
-
-
-
-
-                    </div>
-
-
+                    </fieldset>
                 </form>
             </div>
 
@@ -262,15 +263,18 @@
                 <div class="col-md-12">
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi atque aliquid deleniti
                         voluptatibus nostrum accusantium</p>
-                    <input type="checkbox">
-                    <label class="form-label"><strong>I have read and i accept the terms of use for this
-                            website</strong> </label>
+                    <input type="checkbox" id="agreement-tos">
+                    <label class="form-label">
+                        <strong>
+                            I have read and i accept the terms of use for this website
+                        </strong>
+                    </label>
                     <div class="invalid-feedback">
                         Security code required
                     </div>
                 </div>
 
-                <button class="btn btn-primary float-end" type="submit">Continue to checkout</button>
+                <button class="btn btn-primary float-end" id="btn-order">Continue to checkout</button>
             </div>
         </div>
     </main>
