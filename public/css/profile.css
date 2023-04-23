@@ -7,10 +7,6 @@ header {
     box-shadow: 0 4px 2px -2px gray;
 }
 
-header img {
-    height: -webkit-fill-available;
-    width: auto;
-}
 
 .headul {
     list-style: none;
