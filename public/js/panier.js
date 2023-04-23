@@ -8,12 +8,6 @@ let taxRate = 0.14975;
 
 
 
-let taxNum = Number.parseFloat(subtotal.innerText) * taxRate;
-tax.innerText = taxNum.toFixed(2);
-
-let totalNum = Number.parseFloat(subtotal.innerText) * (1 + taxRate);
-total.innerText = totalNum.toFixed(2);
-
 const updateCart = async () => {
     let products = document.getElementById('cart-items');
     let prices = document.getElementsByClassName('item-price');
@@ -179,4 +173,29 @@ const updateCartRowClient = (product, parent) => {
     parent.append(trProduct);
 
 
+}
+
+let btnProduits = document.getElementsByClassName('produits');
+
+const ouvrirProduit = async (event) => {
+
+    let idProduit = parseInt(event.currentTarget.id);
+
+    let data = {
+        id_produit: idProduit,
+    }
+
+    let queryString = new URLSearchParams(data).toString();
+
+    window.location.href = `/product?${queryString}`;
+    
+    console.log(queryString);
+    console.log(idProduit);
+}
+
+
+for(let produit of btnProduits){
+    produit.addEventListener('click', (event) => {
+        ouvrirProduit(event);
+    });
 }
