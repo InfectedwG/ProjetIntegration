@@ -282,6 +282,19 @@ table tr td input{
       padding: 16px;
     }
   }
+
   
-  
+  input:invalid.active {
+    border: 2px solid #800;
+}
+
+.error-field {
+    display: none;
+    background-color: #800;
+    color: #fff;
+}
+
+.error-field.active {
+    display: block;
+}
   

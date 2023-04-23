@@ -39,59 +39,61 @@
 
                 <div class="mb-3">
                     <label for="InputNom" class="form-label">Nom</label>
-                    <input type="text" class="form-control" value="{{user.last_name}}" id="InputNom">
+                    <input type="text" class="form-control" value="{{user.last_name}}" id="InputNom" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputPrenom" class="form-label">Prenom</label>
-                    <input type="text" class="form-control" value="{{user.first_name}}" id="InputPrenom">
+                    <input type="text" class="form-control" value="{{user.first_name}}" id="InputPrenom" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputEmail" class="form-label">Email address</label>
                     <input type="email" class="form-control" value="{{user.email}}" id="InputEmail"
-                        aria-describedby="emailHelp">
+                        aria-describedby="emailHelp" required>
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAppartement" class="form-label">Appartement</label>
-                    <input type="text" class="form-control" value="{{user.appartment}}" id="InputAppartement">
+                    <input type="text" class="form-control" value="{{user.appartment}}" id="InputAppartement" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAdresse" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" value="{{user.street_address}}" id="InputAdresse">
+                    <input type="text" class="form-control" value="{{user.street_address}}" id="InputAdresse" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputVille" class="form-label">Ville</label>
-                    <input type="text" class="form-control" value="{{user.city}}" id="InputVille">
+                    <input type="text" class="form-control" value="{{user.city}}" id="InputVille" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputProvince" class="form-label">Province</label>
-                    <input type="text" class="form-control" value="{{user.province_state}}" id="InputProvince">
+                    <input type="text" class="form-control" value="{{user.province_state}}" id="InputProvince" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputPays" class="form-label">Pays</label>
-                    <input type="text" class="form-control" value="{{user.country}}" id="InputPays">
+                    <input type="text" class="form-control" value="{{user.country}}" id="InputPays" required>
                 </div>
                 <div class="mb-3">
                     <label for="InputCodePostale" class="form-label">Code Postale</label>
-                    <input type="text" class="form-control" value="{{user.postal_code}}" id="InputCodePostale">
+                    <input type="text" class="form-control" minlength="6" maxlength="7" pattern="^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$" value="{{user.postal_code}}" aria-describedby="postalHelp" id="InputCodePostale" required>
+                    <div id="postalHelp" class="form-text">Exemple : H2J 1L8.</div>
                 </div>
                 <button type="submit" id="Update-user" class="btn btn-primary">Submit</button>
             </form>
 
 
             <h1 class="h1 mb-3">Change Password</h1>
-            <form>
+            <form novalidate id="form-login">
                 <div class="mb-3">
                     <label for="InputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1">
+                    <input type="password" minlength="8" maxlength="20" class="form-control" value="{{user.password}}" id="InputPassword1" required>
+                    <div id="password-error-field" class="error-field"></div>
                     <div id="InputPassword1" class="form-text">Must be 8-20 characters long.</div>
 
                 </div>
                 <div class="mb-3">
                     <label for="InputPassword2" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2">
+                    <input type="password" minlength="8" maxlength="20" class="form-control" value="{{user.password}}" id="InputPassword2" required>
                     <div id="InputPassword2" class="form-text">Must be 8-20 characters long.</div>
                 </div>
                 <button type="submit" id="Update-password" class="btn btn-primary">Submit</button>
