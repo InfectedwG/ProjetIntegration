@@ -1,32 +1,37 @@
 <div class="container pt-5">
-    <section class="flex shoppingpart">
+    <section class="flex shoppingpart mb-5">
         <div>
-            <div class="shoppinginfo">
-                <p class="colorblue space0">Shipping to Canada?</p>
-                <p class="space0">Please call 262-376-0768</p>
-                <p class="space">Available Monday through Friday between 8:00 a.m and 4:00 p.m CST to place your
-                    order Thank you!</p>
+            <div class="shopping-info">
+                <p class="color-blue space-0">Shipping to Canada?</p>
+                <p class="space-0">Please call 262-376-0768</p>
+                <p class="space">Available Monday through Friday between 8:00 a.m and 4:00 p.m CST to place your order.
+                    Thank you!</p>
             </div>
+
         </div>
         <div class="grid w100">
             <div class="padspace">
                 <table>
                     <thead>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <p>Product</p>
-                        </td>
-                        <td>
-                            <p>Price</p>
-                        </td>
-                        <td>
-                            <p>Quantity</p>
-                        </td>
-                        <td>
-                            <p>Subtotal</p>
-                        </td>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="table-header-right">
+                                <p class="table-header-bold">Product</p>
+                            </td>
+                            <td class="table-header-right">
+                                <p class="table-header-bold">Price</p>
+                            </td>
+                            <td class="table-header-right">
+                                <p class="table-header-bold">Quantity</p>
+                            </td>
+                            <td class="table-header-right">
+                                <p class="table-header-bold">Subtotal</p>
+                            </td>
+                        </tr>
                     </thead>
+
+
                     <tbody id="cart-items">
                         {{#each produits}}
                         <tr class="produits">
@@ -35,20 +40,26 @@
                                         this.is_selected}} checked {{/if}}></div>
                             </td>
                             <td>
-                                <div class="flex"><img src="img/cat.jpg" /></div>
+                                <div class="flex"><img src="/img/produits/{{this.product_id}}/main.jpg"
+                                        style="width: 50px; height: 50px"> </div>
                             </td>
                             <td>
-                                <p id="{{this.product_id}}" class="item-id">{{this.name}}</p>
+                                <p id="{{this.product_id}}" class="item-id-bold">{{this.name}}</p>
                             </td>
+
                             <td>
-                                <p class="item-price">{{this.price}}</p>
+                                <p class="item-price-bold">${{this.price}}</p>
                             </td>
+
                             <td>
-                                <div class="flex"><input type="number" class="item-quantity" value="{{this.quantity}}"
-                                        min="0" max="10"></div>
+                                <div class="flex">
+                                    <input type="number" class="item-quantity" value="{{this.quantity}}" min="0"
+                                        max="10">
+                                </div>
                             </td>
+
                             <td>
-                                <p class="item-subtotal">{{this.subtotal}}</p>
+                                <p class="item-subtotal">${{this.subtotal}}</p>
                             </td>
                         </tr>
                         {{/each}}
@@ -57,11 +68,11 @@
                         <td colspan="6">
                             <div class="flex w100 spacer">
                                 <div class="flex left">
-                                    <input type="text" class="padding10" placeholder="Coupon code" />
-                                    <input type="button" class="black padding10" value="APPLY COUPON" />
+                                    <input type="text" class="padding10 mr-2" placeholder="Coupon code" />
+                                    <input type="button" class="btn btn-dark" value="APPLY COUPON" />
                                 </div>
                                 <div class="flex right lastbtn">
-                                    <input type="button" class="flex grey padding10" value="UPDATE CART"
+                                    <input type="button" class="btn btn-secondary" value="UPDATE CART"
                                         id="update-cart-btn" />
                                 </div>
                             </div>
@@ -70,53 +81,68 @@
 
                 </table>
             </div>
-            <div class="flex padspace">
-                <div class="w50 grid">
+            <div class="flex padspace mb-5">
+                <div class="w50 grid mr-3 pt-5">
                     <H2 class="orange">YOU MAY BE INTERESTED IN...</H2>
-                    <div class="grid">
-                        <img src="img/ball.jpg" />
-                        <p class="blue">ID:3368</p>
-                        <h4>#3868 REPL...</h4>
-                        <h5 class="blue">$2.49</h5>
+                    <div class="row product-list">
+
+                        {{#each pruductsbycategorie}}
+
+                        <div class="col-4 products">
+                            <button class="produits" id="{{this.id}}">
+                                <div class="product-container">
+                                    <a href="#">
+                                        <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded"
+                                            style="width: 100px; height: 100px">
+                                    </a>
+                                    <a href="#" class="product-id">ID:{{this.code}}</a>
+                                    <a href="#" class="product-name">#{{this.code}} {{this.name}}</a>
+                                    <p class="product-price">${{this.price}}</p>
+                                </div>
+                            </button>
+                        </div>
+                        {{/each}}
                     </div>
                 </div>
-                <div class="w50">
+                <div class="w50 pt-5">
                     <H2 class="orange">CART TOTALS</H2>
-                    <table class="w100 table22">
-                        <tr>
+                    <table class="w100 table22 mb-3">
+                        <tr class="border-bottom">
                             <td>
-                                <p>Subtotal</p>
+                                <p class="table-header-bold">Subtotal</p>
                             </td>
                             <td>
-                                <p id="subtotal">{{subtotal}}</p>
+                                <p>${{subtotal}}</p>
+                            </td>
+                        </tr>
+                        <tr class="border-bottom">
+                            <td>
+                                <p class="table-header-bold">Shipping</p>
+                            </td>
+                            <td>
+                                <p class="item-shipping">Calculate shipping <img class="link-dark" href="#"><svg class="bi" width="24" height="24">
+                                        <use xlink:href="#cart" />
+                                    </svg></img></p>
+                            </td>
+                        </tr>
+                        <tr class="border-bottom">
+                            <td>
+                                <p class="table-header-bold">Tax</p>
+                            </td>
+                            <td>
+                                <p>${{taxAmount}}</p>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <p>Shipping</p>
+                                <p class="table-header-bold">Total</p>
                             </td>
                             <td>
-                                <p class="blue">Calculate shipping</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Tax</p>
-                            </td>
-                            <td>
-                                <p id="tax"></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Total</p>
-                            </td>
-                            <td>
-                                <p id="total"></p>
+                                <p class="table-header-bold">${{total}}</p>
                             </td>
                         </tr>
                     </table>
-                    <input type="button" value="PROCEED TO CHECKOUT" class="checkbtn black" id="btn-checkout" />
+                    <input type="button" value="PROCEED TO CHECKOUT" class="btn btn-dark" id="btn-checkout" />
                 </div>
             </div>
         </div>

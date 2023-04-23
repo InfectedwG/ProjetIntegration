@@ -239,6 +239,7 @@ app.get('/profile', async (request, response) => {
             user: user,
             commandes: commandes,
             headerCart: headerCart,
+            headerCategories: await model.getCategoriesDB(),
             cartAccess: cartAccess,
 
 
@@ -310,7 +311,8 @@ app.get('/panier', async (request, response) => {
             subtotal += productSubtotal;
         }
 
-
+        let total = subtotal * (1 + taxRate);
+        let taxAmount = subtotal * taxRate;
 
         response.render('panier', {
             titre: 'Panier',
@@ -319,10 +321,11 @@ app.get('/panier', async (request, response) => {
             produits: produits,
             subtotal: subtotal.toFixed(2),
             headerCategories: await model.getCategoriesDB(),
+            pruductsbycategorie: await model.getSameCategoryProductsByProductId(3),
             headerCart: headerCart,
             taxRate: taxRate,
-            taxAmount: subtotal * taxRate,
-            total: subtotal * (1 + taxRate),
+            taxAmount: taxAmount.toFixed(2),
+            total: total.toFixed(2),
             cartAccess: cartAccess,
 
         });

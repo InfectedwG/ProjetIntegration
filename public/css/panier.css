@@ -6,12 +6,12 @@ body {
 header {
     box-shadow: 0 4px 2px -2px gray;
 }
-
+/*
 header img {
     height: -webkit-fill-available;
     width: auto;
 }
-
+*/
 .headul {
     list-style: none;
     display: flex;
@@ -213,3 +213,64 @@ table tr td input{
 .padding5-0{
     padding: 5px 0px;
 }
+
+.product-container {
+    height: 100px; 
+  }
+
+  .table-header-right {
+    text-align: right;
+  }
+  
+  .table-header-bold {
+    font-weight: bold;
+  }
+
+  .item-price-bold {
+    font-weight: bold;
+    color: #243a68;
+  }
+
+  .item-quantity {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #555;
+    width: 50px;
+  }
+  
+  .item-quantity:focus {
+    outline: none;
+    border-color: #1c2331;
+  }
+
+  .item-id-bold {
+    font-weight: 500;
+    color: #0077be;
+  }
+
+  .shopping-info {
+    padding: 10px;
+    border: 1px solid black;
+    max-width: 500px; 
+  }
+  
+  .color-blue {
+    color: #0077be;
+  }
+  
+  .space-0 {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .space {
+    margin-top: 10px;
+  }
+  
+  .item-shipping{
+    color: #126fa4;
+  }
+  
+  
