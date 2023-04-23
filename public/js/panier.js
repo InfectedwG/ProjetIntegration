@@ -1,53 +1,33 @@
-let subtotal = document.getElementById('subtotal');
-let total = document.getElementById('total');
-let tax = document.getElementById('tax');
+let subtotal = document.getElementById('cart-subtotal');
+let total = document.getElementById('cart-total');
+let tax = document.getElementById('cart-tax');
 let updateCartBtn = document.getElementById('update-cart-btn');
 let checkoutBtn = document.getElementById('btn-checkout');
 
-let taxRate = 0.14975;
-
-
-
 const updateCart = async () => {
-    let products = document.getElementById('cart-items');
-    let prices = document.getElementsByClassName('item-price');
+
+    let produits = document.getElementsByClassName('produits');
+
+    let cart = document.getElementById('cart-items');
     let quantities = document.getElementsByClassName('item-quantity');
-    let itemSubtotals = document.getElementsByClassName('item-subtotal');
-    let productIds = document.getElementsByClassName('item-id');
     let checkboxes = document.getElementsByClassName('item-isSelected');
-    let tempSubtotal = 0;
-    let dataItemId = [];
-    let dataItemQuantity = [];
-    let dataItemIsSelected = [];
 
-    for (let i = 0; i < prices.length; i++) {
+    let data = [];
+
+    for (let i = 0; i < produits.length; i++) {
         let quantity = Number.parseInt(quantities[i].value);
-        dataItemId.push(productIds[i].id);
-        dataItemQuantity.push(quantity);
-        dataItemIsSelected.push(checkboxes[i].checked);
+        let isSelected = 0;
+        if (checkboxes[i].checked) isSelected = 1;
 
-        /*
-        let tempItemSubtotal = price * quantity;
-        itemSubtotals[i].innerText = tempItemSubtotal.toFixed(2);
-        tempSubtotal += price * quantity;
-        */
+        let product = {
+            product_id: parseInt(produits[i].id),
+            quantity: quantity,
+            is_selected: isSelected,
+        }
+        data.push(product);
+
     }
-    products.innerHTML = '';
-
-
-
-    /*
-    subtotal.innerText = tempSubtotal.toFixed(2);
-    let tempTax = tempSubtotal * taxRate;
-    tax.innerText = tempTax.toFixed(2);
-    let tempTotal = tempSubtotal * (1 + taxRate);
-    total.innerText = tempTotal.toFixed(2);
-    */
-    let data = {
-        product_ids: dataItemId,
-        is_selecteds: dataItemIsSelected,
-        quantities: dataItemQuantity,
-    }
+    cart.innerHTML = '';
 
 
     let response = await fetch('/api/update_cart', {
@@ -56,34 +36,38 @@ const updateCart = async () => {
         body: JSON.stringify(data),
     });
 
-    let cartInfo = await response.json();
+    if (response.status === 201) {
+        let cartItemsUpdated = await response.json();
 
-    updateCartClient(cartInfo, products);
-
-
+        updateCartClient(cartItemsUpdated, cart);
+    }
 
 }
 
-updateCartBtn.addEventListener('click', updateCart);
-checkoutBtn.addEventListener('click', async () => {
+updateCartBtn.addEventListener('click', async () => {
     await updateCart();
+});
 
-    let userId = 2;
+checkoutBtn.addEventListener('click', async () => {
 
-    let data = {
-        user_id: userId,
-    }
-
-    let queryString = new URLSearchParams(data).toString();
+    await updateCart();
 
     window.location.href = `/checkout`;
 });
 
-const updateCartClient = (cart, cartItems) => {
-    
-    for(let i = 0; i < cart.length-1; i++){
-        updateCartRowClient(cart[i], cartItems);
+const updateCartClient = (cartItems, cart) => {
+
+    for (let i = 0; i < cartItems.length - 1; i++) {
+        updateCartRowClient(cartItems[i], cart);
     }
+    let subtotal = document.getElementById('cart-subtotal');
+    let total = document.getElementById('cart-total');
+    let tax = document.getElementById('cart-tax');
+    console.log(cartItems[cartItems.length - 1].subtotal);
+
+    subtotal.innerText = '$' + cartItems[cartItems.length - 1].subtotal;
+    tax.innerText = '$' + cartItems[cartItems.length - 1].taxAmount;
+    total.innerText = '$' + cartItems[cartItems.length - 1].total;
 
 }
 
@@ -102,7 +86,7 @@ const updateCartRowClient = (product, parent) => {
     let inputCheck = document.createElement('input');
     inputCheck.type = 'checkbox';
     inputCheck.classList.add('item-isSelected');
-    if(product.is_selected === 1) inputCheck.checked = true;
+    if (product.is_selected === 1) inputCheck.checked = true;
 
     divCheck.append(inputCheck);
     tdCheck.append(divCheck);
@@ -115,7 +99,9 @@ const updateCartRowClient = (product, parent) => {
     divImg.classList.add('flex');
 
     let img = document.createElement('img');
-    img.src = 'img/cat.jpg';
+    img.src = `/img/produits/${product.product_id}/main.jpg`;
+    img.style.width = '50px';
+    img.style.height = '50px';
 
     divImg.append(img);
     tdImg.append(divImg);
@@ -147,7 +133,7 @@ const updateCartRowClient = (product, parent) => {
 
     let divQuantity = document.createElement('div');
     divQuantity.classList.add('flex');
-    
+
     let inputQuantity = document.createElement('input');
     inputQuantity.type = 'number';
     inputQuantity.classList.add('item-quantity');
@@ -175,7 +161,7 @@ const updateCartRowClient = (product, parent) => {
 
 }
 
-let btnProduits = document.getElementsByClassName('produits');
+let btnProduits = document.getElementsByClassName('produits-recommander');
 
 const ouvrirProduit = async (event) => {
 
@@ -188,13 +174,13 @@ const ouvrirProduit = async (event) => {
     let queryString = new URLSearchParams(data).toString();
 
     window.location.href = `/product?${queryString}`;
-    
+
     console.log(queryString);
     console.log(idProduit);
 }
 
 
-for(let produit of btnProduits){
+for (let produit of btnProduits) {
     produit.addEventListener('click', (event) => {
         ouvrirProduit(event);
     });

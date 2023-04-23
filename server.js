@@ -84,6 +84,7 @@ app.get('/', async (request, response) => {
         headerCategories: await model.getCategoriesDB(),
         headerCart: headerCart,
         cartAccess: cartAccess,
+        user: request.user,
     });
 
 });
@@ -108,6 +109,7 @@ app.get('/login-signup', async (request, response) => {
         headerCategories: await model.getCategoriesDB(),
         headerCart: headerCart,
         cartAccess: cartAccess,
+        user: request.user,
 
     });
 });
@@ -142,6 +144,7 @@ app.get('/category', async (request, response) => {
         headerCategories: await model.getCategoriesDB(),
         headerCart: headerCart,
         cartAccess: cartAccess,
+        user: request.user,
     });
 });
 
@@ -181,6 +184,7 @@ app.get('/product', async (request, response) => {
         headerCategories: await model.getCategoriesDB(),
         headerCart: headerCart,
         cartAccess: cartAccess,
+        user: request.user,
     });
 });
 
@@ -209,6 +213,7 @@ app.get('/profile', async (request, response) => {
         let commandes = await model.getAllCommands(request.user.id);
 
         for (let c of commandes) {
+            c.date = new Date(c.date);
             let subtotal = 0;
             let total = 0;
             let orderProducts = await model.getOrderProductsAlter(c.id);
@@ -232,7 +237,7 @@ app.get('/profile', async (request, response) => {
         }
 
         response.render('profile', {
-            titre: "(profile de l'utilisateur)",
+            titre: "(profil de l'utilisateur)",
             styles: ['/css/profile.css'],
             scripts: ['/js/profile.js'],
             user: user,
@@ -241,7 +246,6 @@ app.get('/profile', async (request, response) => {
             headerCategories: await model.getCategoriesDB(),
             cartAccess: cartAccess,
             headerCategories: await model.getCategoriesDB(),
-
         });
     }
     else {
@@ -275,6 +279,7 @@ app.get('/privacy-policy', async (request, response) => {
         headerCategories: await model.getCategoriesDB(),
         headerCart: headerCart,
         cartAccess: cartAccess,
+        user: request.user,
 
     });
 });
@@ -309,6 +314,7 @@ app.get('/panier', async (request, response) => {
         let subtotal = 0;
 
 
+
         for (let p of produits) {
             let productSubtotal = p.price * p.quantity;
             p.subtotal = productSubtotal.toFixed(2);
@@ -332,6 +338,7 @@ app.get('/panier', async (request, response) => {
             total: total.toFixed(2),
             cartAccess: cartAccess,
             orderStatus: orderStatus,
+            user: request.user,
 
         });
     }
@@ -405,6 +412,7 @@ app.get('/checkout', async (request, response) => {
             countryBilling: countryBilling,
             shipping_info: shippingInfo,
             billing_info: billingInfo,
+            user: request.user,
         });
     }
     else {
@@ -416,38 +424,37 @@ app.get('/checkout', async (request, response) => {
 
 app.patch('/api/update_cart', async (request, response) => {
     if (request.user && request.user.access_id === 1) {
+        let cartItems = request.body;
 
+        let cart = await model.getCartIdByUserIdDB(request.user.id);
+        let cart_id = cart.id;
+        
+        for (let item of cartItems) {
 
-        let cart_id = await model.getCartIdByUserIdDB(request.user.id);
-        let productIdArray = request.body.product_ids;
-        let quantityArray = request.body.quantities;
-        let isSelectedArray = [];
-        for (let selected of request.body.is_selecteds) {
-            if (selected) isSelectedArray.push(1);
-            else isSelectedArray.push(0);
+            if (item.quantity === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
+
+            else {
+                await model.updateCartItemsByProductIdAndCartIdDB(cart_id, item.product_id, item.quantity, item.is_selected);                
+            }
         }
-        for (let i = 0; i < productIdArray.length; i++) {
-
-            if (quantityArray[i] === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i]);
-
-            else await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, productIdArray[i], quantityArray[i], isSelectedArray[i]);
-        }
-        let produitsPanier = await model.getCartListItemsByUserIdDB(request.user.id);
+        let cartItemsUpdated = await model.getCartListItemsByUserIdDB(request.user.id);
         let subtotal = 0;
 
-        for (let p of produitsPanier) {
-            let productSubtotal = p.price * p.quantity;
-            p.subtotal = productSubtotal.toFixed(2);
+        for (let item of cartItemsUpdated) {
+            let productSubtotal = item.price * item.quantity;
+            item.subtotal = productSubtotal.toFixed(2);
             subtotal += productSubtotal;
         }
-        produitsPanier.push({
-            subtotal: subtotal,
-            taxRate: taxRate,
-            total: subtotal * 1 + taxRate,
+        let taxAmount = taxRate*subtotal;
+        let total = subtotal * (1 + taxRate);
+
+        cartItemsUpdated.push({
+            subtotal: subtotal.toFixed(2),
+            taxAmount: taxAmount.toFixed(2),
+            total: total.toFixed(2),
         });
 
-
-        response.status(201).json(produitsPanier).end();
+        response.status(201).json(cartItemsUpdated).end();
     }
     else {
         response.status(403).end();

@@ -232,7 +232,7 @@ table tr td input{
   }
 
   .item-quantity {
-    padding: 5px 10px;
+    padding: 5px 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -267,10 +267,11 @@ table tr td input{
   
   .space {
     margin-top: 10px;
+    
   }
+
   
-  .item-shipping{
-    color: #126fa4;
-  }
+  
+  
   
   

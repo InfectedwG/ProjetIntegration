@@ -1,11 +1,11 @@
 <div class="container pt-5">
     <div style="display: {{#if orderStatus}}block{{else}}none{{/if}};">
-        Commande completee avec succes!
+        <h1 style="text-align: center; color: #0077be">Commande completee avec succes!</h1>
     </div>
     <section class="flex shoppingpart">
         <div>
             <div class="shopping-info">
-                <p class="color-blue space-0">Shipping to Canada?</p>
+                <p class="color-blue space-0">Shipping outside of North America?</p>
                 <p class="space-0">Please call 262-376-0768</p>
                 <p class="space">Available Monday through Friday between 8:00 a.m and 4:00 p.m CST to place your order.
                     Thank you!</p>
@@ -37,7 +37,7 @@
 
                     <tbody id="cart-items">
                         {{#each produits}}
-                        <tr class="produits">
+                        <tr class="produits" id="{{this.product_id}}">
                             <td>
                                 <div class="flex red"><input type="checkbox" class="item-isSelected" {{#if
                                         this.is_selected}} checked {{/if}}></div>
@@ -47,7 +47,7 @@
                                         style="width: 50px; height: 50px"> </div>
                             </td>
                             <td>
-                                <p id="{{this.product_id}}" class="item-id-bold">{{this.name}}</p>
+                                <p class="item-id-bold">{{this.name}}</p>
                             </td>
 
                             <td>
@@ -92,7 +92,7 @@
                         {{#each pruductsbycategorie}}
 
                         <div class="col-4 products">
-                            <button class="produits" id="{{this.id}}">
+                            <button class="produits-recommander" id="{{this.id}}">
                                 <div class="product-container">
                                     <a href="#">
                                         <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded"
@@ -115,15 +115,15 @@
                                 <p class="table-header-bold">Subtotal</p>
                             </td>
                             <td>
-                                <p>${{subtotal}}</p>
+                                <p id="cart-subtotal">${{subtotal}}</p>
                             </td>
                         </tr>
                         <tr class="border-bottom">
                             <td>
-                                <p class="table-header-bold">Shipping</p>
+                                <p class="table-header-bold">Shipping Estimate</p>
                             </td>
                             <td>
-                                <p class="item-shipping">Calculate shipping <img class="link-dark" href="#"><svg class="bi" width="24" height="24">
+                                <p class="item-shipping">$0.00<img class="link-dark" href="#"><svg class="bi" width="24" height="24">
                                         <use xlink:href="#cart" />
                                     </svg></img></p>
                             </td>
@@ -133,7 +133,7 @@
                                 <p class="table-header-bold">Tax</p>
                             </td>
                             <td>
-                                <p>${{taxAmount}}</p>
+                                <p id="cart-tax">${{taxAmount}}</p>
                             </td>
                         </tr>
                         <tr>
@@ -141,7 +141,7 @@
                                 <p class="table-header-bold">Total</p>
                             </td>
                             <td>
-                                <p class="table-header-bold">${{total}}</p>
+                                <p class="table-header-bold" id="cart-total">${{total}}</p>
                             </td>
                         </tr>
                     </table>
