@@ -1,26 +1,28 @@
 <div class="container">
     <section class="section-one row border-bottom">
 
-        <div class="product-left col-4 py-3 ml-4  d-block ">
 
+        <div class="product-left col-4 py-3 ml-4  d-block ">
             <h1 class="h1 mb-3">Informations</h1>
             <div>
+
                 <div class="text-center mb-3">
                     <img src="/img/user.avif" class="img-thumbnail rounded" alt="...">
                 </div>
 
                 <ul class="list-group">
-                    <li class="list-group-item">
-                        Nom : Jean
+                    <li class="list-group-item" id="nomInfo">
+                        Nom : {{user.last_name}}
                     </li>
-                    <li class="list-group-item">
-                        prenom : Desjardins
+                    <li class="list-group-item" id="prenomInfo">
+                        prenom : {{user.first_name}}
                     </li>
-                    <li class="list-group-item">
-                        Adresse : adresse line, ville, province, pays Code Postale
+                    <li class="list-group-item" id="adresseInfo">
+                        Adresse : {{user.appartment}}, {{user.street_address}}, {{user.city}}, {{user.province_state}},
+                        {{user.country}}, {{user.postal_code}}
                     </li>
-                    <li class="list-group-item">
-                        Adresse Email : aaa@aa.aa
+                    <li class="list-group-item" id="emailInfo">
+                        Adresse Email : {{user.email}}
                     </li>
 
                 </ul>
@@ -37,108 +39,108 @@
 
                 <div class="mb-3">
                     <label for="InputNom" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="InputNom">
+                    <input type="text" class="form-control" value="{{user.last_name}}" id="InputNom">
                 </div>
                 <div class="mb-3">
                     <label for="InputPrenom" class="form-label">Prenom</label>
-                    <input type="text" class="form-control" id="InputPrenom">
+                    <input type="text" class="form-control" value="{{user.first_name}}" id="InputPrenom">
                 </div>
                 <div class="mb-3">
                     <label for="InputEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp">
+                    <input type="email" class="form-control" value="{{user.email}}" id="InputEmail"
+                        aria-describedby="emailHelp">
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                 </div>
-                <div class="mb-3">
-                    <label for="InputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="PasswordHelp">
-                    <div id="PasswordHelp" class="form-text">Must be 8-20 characters long.</div>
 
+                <div class="mb-3">
+                    <label for="InputAppartement" class="form-label">Appartement</label>
+                    <input type="text" class="form-control" value="{{user.appartment}}" id="InputAppartement">
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAdresse" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" id="InputAdresse">
+                    <input type="text" class="form-control" value="{{user.street_address}}" id="InputAdresse">
                 </div>
                 <div class="mb-3">
                     <label for="InputVille" class="form-label">Ville</label>
-                    <input type="text" class="form-control" id="InputVille">
+                    <input type="text" class="form-control" value="{{user.city}}" id="InputVille">
                 </div>
                 <div class="mb-3">
                     <label for="InputProvince" class="form-label">Province</label>
-                    <input type="text" class="form-control" id="InputProvince">
+                    <input type="text" class="form-control" value="{{user.province_state}}" id="InputProvince">
                 </div>
                 <div class="mb-3">
                     <label for="InputPays" class="form-label">Pays</label>
-                    <input type="text" class="form-control" id="InputPays">
+                    <input type="text" class="form-control" value="{{user.country}}" id="InputPays">
                 </div>
                 <div class="mb-3">
                     <label for="InputCodePostale" class="form-label">Code Postale</label>
-                    <input type="text" class="form-control" id="InputCodePostale">
+                    <input type="text" class="form-control" value="{{user.postal_code}}" id="InputCodePostale">
                 </div>
+                <button type="submit" id="Update-user" class="btn btn-primary">Submit</button>
+            </form>
 
 
+            <h1 class="h1 mb-3">Change Password</h1>
+            <form>
+                <div class="mb-3">
+                    <label for="InputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1">
+                    <div id="InputPassword1" class="form-text">Must be 8-20 characters long.</div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <div class="mb-3">
+                    <label for="InputPassword2" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2">
+                    <div id="InputPassword2" class="form-text">Must be 8-20 characters long.</div>
+                </div>
+                <button type="submit" id="Update-password" class="btn btn-primary">Submit</button>
             </form>
         </div>
-
-
-
     </section>
 
 
 
 
     <section class="mb-3 mt-3 section-two row border-botto flex shoppingpart">
-
-
-
         <div class="grid w100">
-
             <div class="padspace">
                 <h1 class="h1 mb-3">Liste des commandes</h1>
                 <!-- Code HTML de l'accordéon -->
+                {{#each commandes}}
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
+                        <h2 class="accordion-header" id="heading{{this.id}}">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Commande #1 - Date : 21/04/2023 - Utilisateur : John Doe - Total : 50€
+                                data-bs-target="#collapse{{this.id}}" aria-expanded="true"
+                                aria-controls="collapse{{this.id}}">
+                                Commande #{{this.id}} - Date : {{this.date}} - Utilisateur : {{this.first_name}}
+                                {{this.last_name}} - Total : {{this.total}}$
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <div class="row">
+                        <div id="collapse{{this.id}}" class="accordion-collapse collapse show"
+                            aria-labelledby="heading{{this.id}}" data-bs-parent="#accordionExample">
+                            {{/each}}
+                            <div class="accordion-body mb-3">
+                                {{#each OrderProducts}}
+                                <div class="row mb-3">
                                     <div class="col-md-3">
-                                        <img src="path/to/product1.jpg" alt="Product 1" class="img-fluid">
+                                        <img src="/img/produits/{{this.product_id}}/main.jpg" alt="" class="img-thumbnail rounded"
+                                         style="width: 200px; height: 100px">
                                     </div>
                                     <div class="col-md-6">
-                                        <h3>Product 1</h3>
-                                        <p>Quantity: 2</p>
+                                        <h3>{{this.name}}</h3>
+                                        <p>Quantity : {{this.quantity}}</p>
                                     </div>
                                     <div class="col-md-3">
-                                        <p>Total: 30€</p>
+                                        <p>Price : {{this.price}}$</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <img src="path/to/product2.jpg" alt="Product 2" class="img-fluid">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h3>Product 2</h3>
-                                        <p>Quantity: 1</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <p>Total: 20€</p>
-                                    </div>
-                                </div>
+                                {{/each}}
                             </div>
                         </div>
                     </div>
-
                 </div>
-
     </section>
 </div>
 

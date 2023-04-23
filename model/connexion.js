@@ -71,7 +71,8 @@ const createDatabase = async (connectionPromise) => {
             foreign key (user_id) references Users(user_id));
         
         CREATE TABLE IF NOT EXISTS Order_Product(
-            order_id integer primary key,
+            id integer primary key autoincrement,
+            order_id integer,
             product_id integer not null,
             quantity integer not null,
             foreign key (order_id) references Orders(order_id),
@@ -112,6 +113,14 @@ const createDatabase = async (connectionPromise) => {
             ('Small animal products', 'category_small.png'),
             ('Reptile products', 'category_reptile.png'),
             ('Wild bird products', null);
+
+        INSERT INTO Orders(user_id, shipping_fee, total, date)
+            VALUES (3, 5.0, 25.0, "2022-03-01");
+
+        INSERT INTO Order_Product(order_id, product_id, quantity)
+            VALUES  (1, 1, 2),
+                    (1, 2, 5);
+
                     
         INSERT INTO Products (name, code, price, category_id, availability, description, smart_tips, info, features) 
             VALUES  ('Pet bed', 3789, 29.99, 1, 1, 'Comfortable and durable bed for your furry friend', 'Machine-washable cover', 

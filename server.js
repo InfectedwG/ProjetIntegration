@@ -56,7 +56,6 @@ const taxRate = 0.14975;
 app.get('/', async (request, response) => {
 
 
-
     let cartAccess = false;
 
     let headerCart;
@@ -186,13 +185,48 @@ app.get('/product', async (request, response) => {
 
 app.get('/profile', async (request, response) => {
 
-    response.render('profile', {
-        titre: "(profile de l'utilisateur)",
-        styles: ['/css/profile.css'],
-        scripts: ['/js/profile.js'],
+    let cartAccess = false;
+
+    if (request.user && request.user.access_id === 1) {
+
+        let headerCart;
+
+        cartAccess = true;
+
+        if (request.user) {
+            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        }
+        else {
+            headerCart = {
+                subtotal: '0.00',
+                number_of_items: '0',
+            }
+        }
 
 
-    });
+        let user = await model.getAdresseById(request.user.id);
+        let commandes = await model.getAllCommands(request.user.id);
+        let OrderProducts = await model.getOrderProducts(request.user.id);
+        
+        
+
+        response.render('profile', {
+            titre: "(profile de l'utilisateur)",
+            styles: ['/css/profile.css'],
+            scripts: ['/js/profile.js'],
+            user: user,
+            commandes : commandes,
+            OrderProducts : OrderProducts,
+            headerCart: headerCart,
+            cartAccess: cartAccess,
+
+
+
+        });
+    }
+    else {
+        response.status(403).end();
+    }
 });
 
 app.get('/privacy-policy', async (request, response) => {
@@ -254,6 +288,8 @@ app.get('/panier', async (request, response) => {
             p.subtotal = productSubtotal.toFixed(2);
             subtotal += productSubtotal;
         }
+
+
 
         response.render('panier', {
             titre: 'Panier',
@@ -524,6 +560,56 @@ app.get('/deconnexion', (request, response, next) => {
             response.redirect('/');
         }
     })
+});
+
+app.patch('/api/profile', async (request, response) => {
+
+    if (request.user && request.user.access_id === 1) {
+
+        try {
+            if (!request.user) {
+                return response.status(404).json({ message: 'Utilisateur non trouvé' });
+            }
+
+            console.log(request.body);
+            await model.updateUser(request.user.id, request.body.prenom, request.body.nom, request.body.email, request.body.adresse, request.body.appart, request.body.ville, request.body.postalCode, request.body.province, request.body.pays);
+
+            let user = await model.getUserById(request.user.id);
+            // Renvoyer la réponse
+            response.status(201).json(user).end();
+        } catch (error) {
+            console.error(error);
+            response.status(500).json({ message: 'Erreur serveur' });
+        }
+    }
+    else {
+        response.status(403).end();
+    }
+});
+
+app.patch('/api/profile-password', async (request, response) => {
+
+    if (request.user && request.user.access_id === 1) {
+
+        try {
+            if (!request.user) {
+                return response.status(404).json({ message: 'Utilisateur non trouvé' });
+            }
+
+            console.log(request.body);
+            await model.updateUserPassword(request.user.id, request.body.passwordRegister);
+
+            let user = await model.getUserById(request.user.id);
+            // Renvoyer la réponse
+            response.status(201).json(user).end();
+        } catch (error) {
+            console.error(error);
+            response.status(500).json({ message: 'Erreur serveur' });
+        }
+    }
+    else {
+        response.status(403).end();
+    }
 });
 
 

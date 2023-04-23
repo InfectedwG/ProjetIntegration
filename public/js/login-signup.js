@@ -23,30 +23,31 @@ const submitRegister = async () => {
             email: emailRegister.value,
             password: passwordRegister.value,
         }
+        let response = await fetch('/inscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    
+        if (response.ok) {
+            //window.location.replace('/connexion');
+            signupSuccessful.style.display = 'block';
+        }
+        else if (response.status === 409) {
+            //Afficher erreur dans l'interface graphique
+            console.log('Utilisateur deja existant');
+    
+            // Si l'utilisateur se connect avec un compte qui n'exsite pas
+            //errorCourriel.innerText = "Il y a deja un utilisateur avec cette adress courriel";
+            //errorCourriel.style.display = 'block';
+        }
+        else {
+            console.log('Erreur inconnu');
+        }
+    
     }
 
-    let response = await fetch('/inscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    });
-
-    if (response.ok) {
-        //window.location.replace('/connexion');
-        signupSuccessful.style.display = 'block';
-    }
-    else if (response.status === 409) {
-        //Afficher erreur dans l'interface graphique
-        console.log('Utilisateur deja existant');
-
-        // Si l'utilisateur se connect avec un compte qui n'exsite pas
-        //errorCourriel.innerText = "Il y a deja un utilisateur avec cette adress courriel";
-        //errorCourriel.style.display = 'block';
-    }
-    else {
-        console.log('Erreur inconnu');
-    }
-
+    
 
 }
 
