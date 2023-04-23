@@ -403,7 +403,7 @@ export const updateCartItemsByProductIdAndCartIdDB = async (cart_id, product_id,
         update Cart_Items
         set quantity = ?,
             is_selected = ?
-        where cart_id = ? and product_id = ?
+        where cart_id = ? and product_id = ?;
         `, [quantity, is_selected, cart_id, product_id]
     );
     return resultat.lastID;
