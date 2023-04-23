@@ -1,11 +1,11 @@
 
 import * as model from './methodeDB.js';
 
-export const headerCartMethode = async (user_id, access_id) => {
+export const headerCartMethode = async (user) => {
     let headerCart;
 
-    if (access_id === 1) {
-        let produits = await model.getCartListItemsByUserIdDB(user_id);
+    if (user.access_id === 1) {
+        let produits = await model.getCartListItemsByUserIdDB(user.id);
         let subtotal = 0;
         let numberOfItems = 0;
 

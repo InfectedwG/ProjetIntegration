@@ -86,14 +86,13 @@
             <form novalidate id="form-login">
                 <div class="mb-3">
                     <label for="InputPassword1" class="form-label">Password</label>
-                    <input type="password" minlength="8" maxlength="20" class="form-control" value="{{user.password}}" id="InputPassword1" required>
-                    <div id="password-error-field" class="error-field"></div>
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1" pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
                     <div id="InputPassword1" class="form-text">Must be 8-20 characters long.</div>
 
                 </div>
                 <div class="mb-3">
                     <label for="InputPassword2" class="form-label">Confirm Password</label>
-                    <input type="password" minlength="8" maxlength="20" class="form-control" value="{{user.password}}" id="InputPassword2" required>
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2" pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
                     <div id="InputPassword2" class="form-text">Must be 8-20 characters long.</div>
                 </div>
                 <button type="submit" id="Update-password" class="btn btn-primary">Submit</button>
