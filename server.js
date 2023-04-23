@@ -428,6 +428,8 @@ app.patch('/api/update_cart', async (request, response) => {
 
         let cart = await model.getCartIdByUserIdDB(request.user.id);
         let cart_id = cart.id;
+
+        
         
         for (let item of cartItems) {
 
@@ -445,10 +447,11 @@ app.patch('/api/update_cart', async (request, response) => {
             item.subtotal = productSubtotal.toFixed(2);
             subtotal += productSubtotal;
         }
+
         let taxAmount = taxRate*subtotal;
         let total = subtotal * (1 + taxRate);
 
-        let headerCart = serveur.headerCartMethode(request.user);
+        let headerCart = await serveur.headerCartMethode(request.user);
 
         cartItemsUpdated.push({
             subtotal: subtotal.toFixed(2),
@@ -467,7 +470,6 @@ app.patch('/api/update_cart', async (request, response) => {
 
 app.post('/api/add_to_cart', async (request, response) => {
 
-    console.log(request.body);
     if (request.user === undefined) {
         response.status(403).end();
     }
@@ -483,7 +485,7 @@ app.post('/api/add_to_cart', async (request, response) => {
             for (let item of cartItems) {
                 if (item.product_id === request.body.product_id) {
                     add = false;
-                    quantityUpdated = item.quantity + request.body.product_id;
+                    quantityUpdated = item.quantity + request.body.quantity;
                     isSelected = item.is_selected;
                 }
             }

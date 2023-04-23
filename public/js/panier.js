@@ -1,10 +1,11 @@
-import { updateHeaderCart } from "./methodeCommune";
+import { updateHeaderCart } from "./methodeCommune.js";
 
 let subtotal = document.getElementById('cart-subtotal');
 let total = document.getElementById('cart-total');
 let tax = document.getElementById('cart-tax');
 let updateCartBtn = document.getElementById('update-cart-btn');
 let checkoutBtn = document.getElementById('btn-checkout');
+
 
 const updateCart = async () => {
 
@@ -37,6 +38,7 @@ const updateCart = async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
+    console.log('test');
 
     if (response.status === 201) {
         let cartItemsUpdated = await response.json();
@@ -45,14 +47,12 @@ const updateCart = async () => {
 
         updateHeaderCart(cartItemsUpdated[cartItemsUpdated.length - 1]);
 
-        console.log('test');
     }
 
 }
 
 updateCartBtn.addEventListener('click', async () => {
     await updateCart();
-    console.log('test');
 });
 
 checkoutBtn.addEventListener('click', async () => {
@@ -81,6 +81,7 @@ const updateCartRowClient = (product, parent) => {
 
     let trProduct = document.createElement('tr');
     trProduct.classList.add('produits');
+    trProduct.id = product.product_id;
 
     //------------checkbox-------------------------------------
     let tdCheck = document.createElement('td');
