@@ -75,21 +75,21 @@ const createDatabase = async (connectionPromise) => {
             order_id integer,
             product_id integer not null,
             quantity integer not null,
-            foreign key (order_id) references Orders(order_id),
-            foreign key (product_id) references product(product_id));
+            foreign key (order_id) references Orders(id),
+            foreign key (product_id) references Products(id));
         
         CREATE TABLE IF NOT EXISTS Cart(
             id integer primary key autoincrement,
             user_id integer not null,
-            foreign key (user_id) references Users(user_id));
+            foreign key (user_id) references Users(id));
             
         CREATE TABLE IF NOT EXISTS Cart_Items(
             cart_id integer,
             product_id integer not null,
             quantity integer not null, 
             is_selected integer not null,
-            foreign key (cart_id) references Cart(cart_id),
-            foreign key (product_id) references Products(product_id));
+            foreign key (cart_id) references Cart(id),
+            foreign key (product_id) references Products(id));
                         
         INSERT INTO Access (type) VALUES 
             ('user'),

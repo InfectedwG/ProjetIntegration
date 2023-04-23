@@ -492,14 +492,14 @@ export const getAllCommands = async (user_id) => {
     let connexion = await connectionPromise;
   
     // Récupère les commandes de l'utilisateur avec son nom
-    const rows = await connexion.all(`
+    let rows = await connexion.all(`
       SELECT Orders.id, Orders.total, Orders.date, Users.first_name, Users.last_name
       FROM Orders
       JOIN Users ON Orders.user_id = Users.id
       WHERE Orders.user_id = ?;
     `, [user_id]);
   
-    console.log(rows);
+    
   
     return rows;
   }
@@ -508,13 +508,29 @@ export const getAllCommands = async (user_id) => {
   export const getOrderProducts = async (user_id) => {
     let connexion = await connectionPromise;
 
-    const rows = await connexion.all(`
+    let rows = await connexion.all(`
         SELECT Order_Product.product_id , Products.name, Order_Product.quantity, Products.price, Products.code
         FROM Order_Product 
         JOIN Products ON Order_Product.product_id = products.id
         JOIN Orders ON Order_Product.order_id = Orders.id 
         WHERE Orders.user_id = ?;
     `, [user_id]);
+
+    
+
+    return rows;
+}
+
+export const getOrderProductsAlter = async (order_id) => {
+    let connexion = await connectionPromise;
+
+    let rows = await connexion.all(
+        `
+        SELECT op.order_id, op.product_id , Products.name, op.quantity, Products.price, Products.code
+        FROM Order_Product op
+        inner JOIN Products ON op.product_id = Products.id
+        WHERE op.order_id = ?;
+        `, [order_id]);
 
     console.log(rows);
 

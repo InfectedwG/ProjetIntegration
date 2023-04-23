@@ -110,7 +110,7 @@
 
     <section class="section-two row border-bottom py-3">
         <div class="container">
-            {{#each produit}}
+            
             <div class="row">
                 <div class="tabs col-2">
                     <div class="tab active border-bottom" id="description">Description</div>
@@ -118,14 +118,14 @@
                 </div>
                 <div class="tab-content col">
                     <div class="tab-panel" id="description-content" style="display: block;">
-                        <p>{{this.description}}</p>
+                        <p>{{produit.description}}</p>
                     </div>
                     <div class="tab-panel" id="information-content" style="display: none;">
-                        <p>{{this.info}}</p>
+                        <p>{{produit.info}}</p>
                     </div>
                 </div>
             </div>
-            {{/each}}
+            
         </div>
     </section>
 

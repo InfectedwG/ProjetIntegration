@@ -206,17 +206,38 @@ app.get('/profile', async (request, response) => {
 
         let user = await model.getAdresseById(request.user.id);
         let commandes = await model.getAllCommands(request.user.id);
-        let OrderProducts = await model.getOrderProducts(request.user.id);
-        
-        
+
+        for (let c of commandes) {
+            let subtotal = 0;
+            let total = 0;
+            let orderProducts = await model.getOrderProductsAlter(c.id);
+            console.log(c.id);
+            console.log(orderProducts);
+            
+            for (let p of orderProducts) {
+
+                let productSubtotal = p.price * p.quantity;
+
+                p.subtotal = productSubtotal.toFixed(2);
+
+                subtotal += productSubtotal;
+
+            }
+
+            c.products = orderProducts;
+
+            total = subtotal * (taxRate + 1);
+
+            c.total = total.toFixed(2);
+
+        }
 
         response.render('profile', {
             titre: "(profile de l'utilisateur)",
             styles: ['/css/profile.css'],
             scripts: ['/js/profile.js'],
             user: user,
-            commandes : commandes,
-            OrderProducts : OrderProducts,
+            commandes: commandes,
             headerCart: headerCart,
             cartAccess: cartAccess,
 
@@ -336,10 +357,10 @@ app.get('/checkout', async (request, response) => {
 
 
         for (let item of cartItems) {
-            if(item.is_selected){
+            if (item.is_selected) {
                 let itemSubtotal = item.price * item.quantity;
                 item.subtotal = itemSubtotal.toFixed(2);
-                orderItems.push(item);                
+                orderItems.push(item);
                 subtotal += itemSubtotal;
             }
         }
@@ -347,7 +368,7 @@ app.get('/checkout', async (request, response) => {
         let total = subtotal * (1 + taxRate);
 
         // country is either canada or usa, nothing else
-        
+
 
         let shippingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.shipping_address_id);
         let billingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.billing_address_id);
@@ -465,8 +486,8 @@ app.post('/api/place-order', async (request, response) => {
         let subtotal;
         let total;
         let shippingFee;
-        
-        if(cartItems.length > 0){
+
+        if (cartItems.length > 0) {
             for (let item in cartItems) {
                 if (item.is_selected) {
                     orderItems.push(item);

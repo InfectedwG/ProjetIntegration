@@ -120,20 +120,20 @@
                         </h2>
                         <div id="collapse{{this.id}}" class="accordion-collapse collapse show"
                             aria-labelledby="heading{{this.id}}" data-bs-parent="#accordionExample">
-                            {{/each}}
+
                             <div class="accordion-body mb-3">
-                                {{#each OrderProducts}}
+                                {{#each this.products}}
                                 <div class="row mb-3">
                                     <div class="col-md-3">
-                                        <img src="/img/produits/{{this.product_id}}/main.jpg" alt="" class="img-thumbnail rounded"
-                                         style="width: 200px; height: 100px">
+                                        <img src="/img/produits/{{this.product_id}}/main.jpg" alt=""
+                                            class="img-thumbnail rounded" style="width: 200px; height: 100px">
                                     </div>
                                     <div class="col-md-6">
                                         <h3>{{this.name}}</h3>
                                         <p>Quantity : {{this.quantity}}</p>
                                     </div>
                                     <div class="col-md-3">
-                                        <p>Price : {{this.price}}$</p>
+                                        <p>Price : {{this.subtotal}}$</p>
                                     </div>
                                 </div>
                                 {{/each}}
@@ -141,6 +141,21 @@
                         </div>
                     </div>
                 </div>
+                {{/each}}
     </section>
 </div>
+<script nonce="38db610ac4">
 
+    $(document).ready(function () {
+
+        $('.accordion-button').click(function () {
+
+            var $collapse = $(this).closest('.accordion-header').next('.accordion-collapse');
+
+            $collapse.collapse('toggle');
+
+        });
+
+    });
+
+</script>
