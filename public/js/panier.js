@@ -1,3 +1,5 @@
+import { updateHeaderCart } from "./methodeCommune";
+
 let subtotal = document.getElementById('cart-subtotal');
 let total = document.getElementById('cart-total');
 let tax = document.getElementById('cart-tax');
@@ -40,12 +42,17 @@ const updateCart = async () => {
         let cartItemsUpdated = await response.json();
 
         updateCartClient(cartItemsUpdated, cart);
+
+        updateHeaderCart(cartItemsUpdated[cartItemsUpdated.length - 1]);
+
+        console.log('test');
     }
 
 }
 
 updateCartBtn.addEventListener('click', async () => {
     await updateCart();
+    console.log('test');
 });
 
 checkoutBtn.addEventListener('click', async () => {
@@ -57,17 +64,16 @@ checkoutBtn.addEventListener('click', async () => {
 
 const updateCartClient = (cartItems, cart) => {
 
-    for (let i = 0; i < cartItems.length - 1; i++) {
+    for (let i = 0; i < cartItems.length - 2; i++) {
         updateCartRowClient(cartItems[i], cart);
     }
     let subtotal = document.getElementById('cart-subtotal');
     let total = document.getElementById('cart-total');
     let tax = document.getElementById('cart-tax');
-    console.log(cartItems[cartItems.length - 1].subtotal);
 
-    subtotal.innerText = '$' + cartItems[cartItems.length - 1].subtotal;
-    tax.innerText = '$' + cartItems[cartItems.length - 1].taxAmount;
-    total.innerText = '$' + cartItems[cartItems.length - 1].total;
+    subtotal.innerText = '$' + cartItems[cartItems.length - 2].subtotal;
+    tax.innerText = '$' + cartItems[cartItems.length - 2].taxAmount;
+    total.innerText = '$' + cartItems[cartItems.length - 2].total;
 
 }
 

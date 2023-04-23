@@ -17,7 +17,7 @@ const validateEmail = (email) => {
 }
 
 // Validation du mot de passe
-const validatePassword = (password) => {
+export const validatePassword = (password) => {
     return typeof password === 'string' &&
         !!password &&
         password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);

@@ -14,7 +14,7 @@ import passport from 'passport';
 import * as model from './model/methodeDB.js';
 import * as serveur from './model/methodeServeur.js';
 import './authentification.js';
-import { validationInscription } from './validationInscription.js';
+import { validatePassword, validationInscription } from './validationInscription.js';
 import { validationConnexion } from './validationConnexion.js';
 import middlewareSse from './middlewareSse.js';
 import _ from 'lodash'
@@ -63,7 +63,7 @@ app.get('/', async (request, response) => {
     let headerCart;
 
     if (request.user) {
-        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        headerCart = await serveur.headerCartMethode(request.user);
     }
     else {
         headerCart = {
@@ -121,7 +121,7 @@ app.get('/category', async (request, response) => {
     let headerCart;
 
     if (request.user) {
-        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        headerCart = await serveur.headerCartMethode(request.user);
     }
     else {
         headerCart = {
@@ -157,7 +157,7 @@ app.get('/product', async (request, response) => {
     let headerCart;
 
     if (request.user) {
-        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        headerCart = await serveur.headerCartMethode(request.user);
     }
     else {
         headerCart = {
@@ -199,7 +199,7 @@ app.get('/profile', async (request, response) => {
         cartAccess = true;
 
         if (request.user) {
-            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+            headerCart = await serveur.headerCartMethode(request.user);
         }
         else {
             headerCart = {
@@ -260,7 +260,7 @@ app.get('/privacy-policy', async (request, response) => {
     let headerCart;
 
     if (request.user) {
-        headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+        headerCart = await serveur.headerCartMethode(request.user);
     }
     else {
         headerCart = {
@@ -301,7 +301,7 @@ app.get('/panier', async (request, response) => {
         cartAccess = true;
 
         if (request.user) {
-            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+            headerCart = await serveur.headerCartMethode(request.user);
         }
         else {
             headerCart = {
@@ -357,7 +357,7 @@ app.get('/checkout', async (request, response) => {
         cartAccess = true;
 
         if (request.user) {
-            headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
+            headerCart = await serveur.headerCartMethode(request.user);
         }
         else {
             headerCart = {
@@ -448,11 +448,14 @@ app.patch('/api/update_cart', async (request, response) => {
         let taxAmount = taxRate*subtotal;
         let total = subtotal * (1 + taxRate);
 
+        let headerCart = serveur.headerCartMethode(request.user);
+
         cartItemsUpdated.push({
             subtotal: subtotal.toFixed(2),
             taxAmount: taxAmount.toFixed(2),
             total: total.toFixed(2),
         });
+        cartItemsUpdated.push(headerCart);
 
         response.status(201).json(cartItemsUpdated).end();
     }
@@ -464,25 +467,30 @@ app.patch('/api/update_cart', async (request, response) => {
 
 app.post('/api/add_to_cart', async (request, response) => {
 
+    console.log(request.body);
     if (request.user === undefined) {
         response.status(403).end();
     }
     else if (request.user.access_id === 1) {
         let cart_id = await model.getCartIdByUserIdDB(request.user.id);
-        let cartItems = await model.getCartListItemsByUserIdDB(2);
+        let cartItems = await model.getCartListItemsByUserIdDB(request.user.id);
         let add = true;
 
         if (cartItems.length === 0) await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
         else {
+            let quantityUpdated;
+            let isSelected;
             for (let item of cartItems) {
-                if (item.product_id === request.body.product_id) add = false;
+                if (item.product_id === request.body.product_id) {
+                    add = false;
+                    quantityUpdated = item.quantity + request.body.product_id;
+                    isSelected = item.is_selected;
+                }
             }
-            if (!add) await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, request.body.product_id, request.body.quantity, 1);
+            if (!add) await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, request.body.product_id, quantityUpdated, isSelected);
             else await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
         }
-        let headerCart = await serveur.headerCartMethode(request.user.id, request.user.access_id);
-
-
+        let headerCart = await serveur.headerCartMethode(request.user);
 
         response.status(201).json(headerCart).end();
     }
@@ -636,6 +644,8 @@ app.patch('/api/profile', async (request, response) => {
 app.patch('/api/profile-password', async (request, response) => {
 
     if (request.user && request.user.access_id === 1) {
+
+        if(validatePassword(request.body.password))
 
         try {
             if (!request.user) {

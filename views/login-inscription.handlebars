@@ -61,9 +61,9 @@
 
                 <label for="password-register">Password <span class="required">*</span> </label>
 
-                <input type="password" id="password-register" name="password" required>
+                <input type="password" id="password-register" name="password" required pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
 
-                <label for="password-confirmation-register">Confirm Password <span class="required">*</span> </label>
+                <label for="password-confirmation-register" pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">Confirm Password <span class="required">*</span> </label>
 
                 <input type="password" id="password-confirmation-register" name="password-confirmation" required>
 

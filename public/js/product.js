@@ -54,7 +54,7 @@ btnCart.addEventListener('click', async () => {
 
     });
 
-    let headerCart = await response.json()
+    let headerCart = await response.json();
     updateHeaderCart(headerCart);
 
 });
