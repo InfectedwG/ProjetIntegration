@@ -17,6 +17,7 @@ import './authentification.js';
 import { validationInscription } from './validationInscription.js';
 import { validationConnexion } from './validationConnexion.js';
 import middlewareSse from './middlewareSse.js';
+import _ from 'lodash'
 
 
 // Création du serveur
@@ -48,6 +49,7 @@ app.use(middlewareSse());
 
 
 const taxRate = 0.14975;
+//const _ = require('lodash');
 
 
 
@@ -165,8 +167,7 @@ app.get('/product', async (request, response) => {
         cartAccess = true;
     }
 
-    console.log(request.user);
-    console.log(cartAccess);
+
 
     let productName = await model.getProductNameByIdDB(request.query.id_produit);
 
@@ -211,9 +212,7 @@ app.get('/profile', async (request, response) => {
             let subtotal = 0;
             let total = 0;
             let orderProducts = await model.getOrderProductsAlter(c.id);
-            console.log(c.id);
-            console.log(orderProducts);
-            
+
             for (let p of orderProducts) {
 
                 let productSubtotal = p.price * p.quantity;
@@ -240,8 +239,7 @@ app.get('/profile', async (request, response) => {
             commandes: commandes,
             headerCart: headerCart,
             cartAccess: cartAccess,
-
-
+            headerCategories: await model.getCategoriesDB(),
 
         });
     }
@@ -281,6 +279,12 @@ app.get('/privacy-policy', async (request, response) => {
 });
 
 app.get('/panier', async (request, response) => {
+
+    let orderStatus = false;
+    
+    if(request.query){
+        orderStatus = request.query.order_status;
+    }
 
     let cartAccess = false;
 
@@ -324,6 +328,7 @@ app.get('/panier', async (request, response) => {
             taxAmount: subtotal * taxRate,
             total: subtotal * (1 + taxRate),
             cartAccess: cartAccess,
+            orderStatus: orderStatus,
 
         });
     }
@@ -364,20 +369,21 @@ app.get('/checkout', async (request, response) => {
                 subtotal += itemSubtotal;
             }
         }
+
         let taxAmount = subtotal * taxRate;
         let total = subtotal * (1 + taxRate);
 
+
+        let shippingInfo = await model.getShippingInfoByAddressIdDB(request.user.shipping_address_id);
+        let billingInfo = await model.getBillingInfoByAddressIdDB(request.user.billing_address_id);
+
+
         // country is either canada or usa, nothing else
-
-
-        let shippingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.shipping_address_id);
-        let billingInfo = await model.getAddressInfoByUserIdDB(request.user.id, request.user.billing_address_id);
-
         let countryShipping = false;
-        if (shippingInfo.country == 'CA') country = true;
+        if (shippingInfo.country == 'CA') countryShipping = true;
 
         let countryBilling = false;
-        if (billingInfo.country == 'CA') country = true;
+        if (billingInfo.country == 'CA') countryBilling = true;
 
         response.render('checkout', {
             titre: 'Checkout',
@@ -407,9 +413,7 @@ app.get('/checkout', async (request, response) => {
 
 app.patch('/api/update_cart', async (request, response) => {
     if (request.user && request.user.access_id === 1) {
-        console.log(request.body.product_ids);
-        console.log(request.body.is_selecteds);
-        console.log(request.body.quantities);
+
 
         let cart_id = await model.getCartIdByUserIdDB(request.user.id);
         let productIdArray = request.body.product_ids;
@@ -460,7 +464,7 @@ app.post('/api/add_to_cart', async (request, response) => {
 
         if (cartItems.length === 0) await model.addProductInCartDB(cart_id.id, request.body.product_id, request.body.quantity, 0);
         else {
-            for (let item in cartItems) {
+            for (let item of cartItems) {
                 if (item.product_id === request.body.product_id) add = false;
             }
             if (!add) await model.updateCartItemsByProductIdAndCartIdDB(cart_id.id, request.body.product_id, request.body.quantity, 1);
@@ -483,16 +487,19 @@ app.post('/api/place-order', async (request, response) => {
     if (request.user && request.user.access_id === 1) {
         let cartItems = await model.getCartListItemsByUserIdDB(request.user.id);
         let orderItems = [];
-        let subtotal;
+        let subtotal = 0;
         let total;
-        let shippingFee;
+        let shippingFee = 0.0;
+        let cart = await model.getCartIdByUserIdDB(request.user.id);
+        let cart_id = cart.id
 
         if (cartItems.length > 0) {
-            for (let item in cartItems) {
+            for (let item of cartItems) {
                 if (item.is_selected) {
                     orderItems.push(item);
                     let itemSubtotal = item.price * item.quantity;
                     subtotal += itemSubtotal;
+
                 }
             }
         }
@@ -502,19 +509,27 @@ app.post('/api/place-order', async (request, response) => {
         let todayEpoch = today.getTime();
 
         if (orderItems.length > 0) {
+            let shippingInfo = await model.getShippingInfoByAddressIdDB(request.user.shipping_address_id);
+            if (!_.isEqual(shippingInfo, request.body.shippingInfo)) await model.updateUserShippingInfoDB(request.body.shippingInfo, request.user.id);
+
+            let billingInfo = await model.getBillingInfoByAddressIdDB(request.user.billing_address_id);
+            if (!_.isEqual(billingInfo, request.body.billingInfo)) await model.updateUserBillingInfoDB(request.body.billingInfo, request.user.id);
+            
             let order_id = await model.placeOrderDB(request.user.id, 0.0, total, todayEpoch);
             if (order_id) {
-                for (let item in orderItems) {
+                for (let item of orderItems) {
                     await model.insertOrderDetailsDB(order_id, item.product_id, item.quantity);
+                    await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
                 }
+                response.status(201).json({order_status: true}).end();
             }
-            else response.status(403).end();
+            else response.status(403).json({ message: "erreur order_id" }).end();
         }
-        else response.status(403).end();
+        else response.status(403).json({ message: "erreur aucun item dans order" }).end();
 
 
     }
-    else response.status(403).end();
+    else response.status(403).json({ message: "acces interdit" }).end();
 });
 
 //-----------------------------------Connexion/Deconnexion/Inscription---------------------------------------

@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-
+const timestamp = 1677705958000;
 /**
  * Constante indiquant si la base de données existe au démarrage du serveur 
  * ou non.
@@ -68,7 +68,7 @@ const createDatabase = async (connectionPromise) => {
             shipping_fee real not null,
             total real not null,
             date integer not null,
-            foreign key (user_id) references Users(user_id));
+            foreign key (user_id) references Users(id));
         
         CREATE TABLE IF NOT EXISTS Order_Product(
             id integer primary key autoincrement,
@@ -96,8 +96,8 @@ const createDatabase = async (connectionPromise) => {
             ('admin');
         
         INSERT INTO Addresses (street_address, appartment, city, postal_code, province_state, country)
-        VALUES  ('456 6th avenue', NULL, 'Gatineau', 'J8E 8G1', 'QC', 'CA'),
-                ('123 1st avenue', NULL, 'Ottawa', 'A1B 0C3', 'ON', 'CA');
+        VALUES  ('456 6th avenue', '', 'Gatineau', 'J8E 8G1', 'QC', 'CA'),
+                ('123 1st avenue', '', 'Ottawa', 'A1B 0C3', 'ON', 'CA');
         
         INSERT INTO Users (first_name, last_name, email, password, billing_address_id, shipping_address_id, access_id) values
             ('Mr.', 'Admin', 'admin@admin.com', 'admin', NULL, NULL, 2),
@@ -152,7 +152,7 @@ const createDatabase = async (connectionPromise) => {
             VALUES  (2),
                     (3);
 
-        INSERT INTO Cart_Items (cart_id, product_id, quantity, is_Selected)
+        INSERT INTO Cart_Items (cart_id, product_id, quantity, is_selected)
             VALUES  (1, 1, 1, 1),
                     (1, 2, 2, 1),
                     (1, 3, 1, 0);

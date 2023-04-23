@@ -48,7 +48,7 @@ btnOrder.addEventListener('click', async () => {
     let orderTotal = document.getElementById('order-total');
     let country;
 
-    let data;
+    
 
     if (canadaShip.checked) country = 'CA';
     else country = 'US';
@@ -72,20 +72,14 @@ btnOrder.addEventListener('click', async () => {
         postal_code: zipcodeInputBill.value,
         province_state: provinceInputBill.value,
         country: country
+    }    
+
+    let data = {
+        shippingInfo: shipping_address,
+        billingInfo: billing_address,
     }
 
-    if (differentAddress.disabled === true) {
-
-        data = {
-            shipping_address: shipping_address
-        }
-    }
-    else {
-        data = {
-            shipping_address: shipping_address,
-            billing_address: billing_address,
-        }
-    }
+    console.log(data);
 
     if (orderTotal.innerText != '0.0') {
 
@@ -94,12 +88,30 @@ btnOrder.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         });
+        if(response.status === 201){
+            let status = await response.json();
+            let statusQueryString = new URLSearchParams(status).toString();
+            window.location.href = `/panier?${statusQueryString}`;
+        }
+        else{
+            console.log(await response.json());
+        }
+
+        
     }
     else console.log('vous n\'avez aucun item a commander');
 });
 
-canadaShip.addEventListener('change', checkCountry(canadaShip, usaShip));
-usaShip.addEventListener('change', checkCountry(usaShip, canadaShip));
+canadaShip.addEventListener('change', () => {
+    checkCountry(canadaShip, usaShip);
+});
+usaShip.addEventListener('change', () => {
+    checkCountry(usaShip, canadaShip);
+});
 
-canadaBill.addEventListener('change', checkCountry(canadaBill, usaBill));
-usaBill.addEventListener('change', checkCountry(usaBill, canadaBill));
+canadaBill.addEventListener('change', () => {
+    checkCountry(canadaBill, usaBill)
+});
+usaBill.addEventListener('change', () => {
+    checkCountry(usaBill, canadaBill)
+});
