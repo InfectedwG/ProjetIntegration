@@ -1,5 +1,8 @@
 <div class="container pt-5">
-    <section class="flex shoppingpart mb-5">
+    <div style="display: {{#if orderStatus}}block{{else}}none{{/if}};">
+        Commande completee avec succes!
+    </div>
+    <section class="flex shoppingpart">
         <div>
             <div class="shopping-info">
                 <p class="color-blue space-0">Shipping to Canada?</p>

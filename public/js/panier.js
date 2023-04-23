@@ -76,7 +76,7 @@ checkoutBtn.addEventListener('click', async () => {
 
     let queryString = new URLSearchParams(data).toString();
 
-    window.location.href = `/checkout?${queryString}`;
+    window.location.href = `/checkout`;
 });
 
 const updateCartClient = (cart, cartItems) => {

@@ -272,19 +272,73 @@ export const getUserByIdDB = async (user_id) => {
     return resultat;
 }
 
-export const updateUserShippingInfoDB = async (user_id, address, city, postal_code, province_state, country) => {
+export const checkIfAddressExistsDB = async (address_info) => {
     let connexion = await connectionPromise;
+
+    let resultat = await connexion.get(
+        `
+        select id
+        from Addresses
+        where street_address = ? and appartment = ? and city = ? and postal_code = ? and province_state = ? and country = ?
+        `, [address_info.street_address, address_info.appartment, address_info.city, address_info.postal_code, address_info.province_state, address_info.country]
+    );
+    return resultat;
+}
+
+export const updateUserShippingInfoDB = async (address_info, user_id) => {
+    let connexion = await connectionPromise;
+
+    let address_id; 
+
+    if(await checkIfAddressExistsDB(address_info)) {
+        address_id = await checkIfAddressExistsDB(address_info);
+        console.log('if');
+        console.log(address_id);
+    }
+    else {
+        address_id = await insertNewAddressDB(address_info);
+        console.log('else');
+        console.log(address_id);
+    }
+    console.log('after');
+    console.log(address_id);
 
     let resultat = await connexion.run(
         `
         update Users
-        set address = ?,
-            city = ?,
-            postal_code = ?,
-            province_state = ?,
-            country = ?
+        set shipping_address_id = ?
         where id = ?;
-        `, [address, city, postal_code, province_state, country, user_id]
+        `, [address_id.id, user_id]
+    );
+    return resultat.lastID;
+}
+
+export const updateUserBillingInfoDB = async (address_info, user_id) => {
+    let connexion = await connectionPromise;
+
+    let address_id; 
+
+    if(await checkIfAddressExistsDB(address_info)) address_id = await checkIfAddressExistsDB(address_info);
+    else address_id = await insertNewAddressDB(address_info);
+
+    let resultat = await connexion.run(
+        `
+        update Users
+        set billing_address_id = ?
+        where id = ?;
+        `, [address_id.id, user_id]
+    );
+    return resultat.lastID;
+}
+
+export const insertNewAddressDB = async (address_info) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.run(
+        `
+        insert into Addresses(street_address, appartment, city, postal_code, province_state, country)
+        values (?, ?, ?, ?, ?, ?);
+        `, [address_info.street_address, address_info.appartment, address_info.city, address_info.postal_code, address_info.province_state, address_info.country]
     );
     return resultat.lastID;
 }
@@ -385,19 +439,35 @@ export const addProductInCartDB = async (cart_id, product_id, quantity, is_selec
 
 }
 
-export const getAddressInfoByUserIdDB = async (user_id, address_id) => {
+export const getShippingInfoByAddressIdDB = async (address_id) => {
     let connexion = await connectionPromise;
 
     let resultat = await connexion.get(
         `
-        select a.*, u.id
-        from Addresses a
-        inner join Users u on u.id = a.user_id
-        where user_id = ? and a.id = ?
-        `,[user_id, address_id]
+        select a.street_address, a.appartment, a.city, a.postal_code, a.province_state, a.country
+        from Users u
+        inner join Addresses a on a.id = u.shipping_address_id
+        where u.shipping_address_id = ?
+        `, [address_id]
     );
     return resultat;
 }
+
+export const getBillingInfoByAddressIdDB = async (address_id) => {
+    let connexion = await connectionPromise;
+
+    let resultat = await connexion.get(
+        `
+        select a.street_address, a.appartment, a.city, a.postal_code, a.province_state, a.country
+        from Users u
+        inner join Addresses a on a.id = u.billing_address_id
+        where u.billing_address_id = ?
+        `, [address_id]
+    );
+    return resultat;
+}
+
+
 
 
 
@@ -490,7 +560,7 @@ export const updateUserPassword = async (user_id, password) => {
 
 export const getAllCommands = async (user_id) => {
     let connexion = await connectionPromise;
-  
+
     // Récupère les commandes de l'utilisateur avec son nom
     let rows = await connexion.all(`
       SELECT Orders.id, Orders.total, Orders.date, Users.first_name, Users.last_name
@@ -498,14 +568,14 @@ export const getAllCommands = async (user_id) => {
       JOIN Users ON Orders.user_id = Users.id
       WHERE Orders.user_id = ?;
     `, [user_id]);
-  
-    
-  
-    return rows;
-  }
-  
 
-  export const getOrderProducts = async (user_id) => {
+
+
+    return rows;
+}
+
+
+export const getOrderProducts = async (user_id) => {
     let connexion = await connectionPromise;
 
     let rows = await connexion.all(`
@@ -516,7 +586,7 @@ export const getAllCommands = async (user_id) => {
         WHERE Orders.user_id = ?;
     `, [user_id]);
 
-    
+
 
     return rows;
 }
@@ -532,7 +602,7 @@ export const getOrderProductsAlter = async (order_id) => {
         WHERE op.order_id = ?;
         `, [order_id]);
 
-    console.log(rows);
+    
 
     return rows;
 }
