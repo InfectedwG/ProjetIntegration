@@ -27,6 +27,7 @@ app.set('view engine', 'handlebars');
 
 // Ajout de middlewares
 app.use(helmet(cspOption));
+
 app.use(compression());
 app.use(cors());
 app.use(json());
@@ -43,6 +44,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(middlewareSse());
+
+
 
 const taxRate = 0.14975;
 
@@ -512,7 +515,7 @@ app.post('/connexion', (request, response, next) => {
     }
 });
 
-app.post('/deconnexion', (request, response, next) => {
+app.get('/deconnexion', (request, response, next) => {
     request.logOut((error) => {
         if (error) {
             next(error);
