@@ -61,7 +61,7 @@ btnUpdateUser.addEventListener('click', async (event) => {
     event.preventDefault();
 });
 
-
+/*
 btnUpdatePassword.addEventListener('click', async (event) => {
 
 
@@ -69,10 +69,10 @@ btnUpdatePassword.addEventListener('click', async (event) => {
     let passwordConfirmation = document.getElementById('InputPassword2').value;
 
 
-    if (passwordRegister.value === passwordConfirmation.value) {
+    if (passwordRegister === passwordConfirmation) {
         let data = {
             passwordRegister: passwordRegister,
-            passwordConfirmation: passwordConfirmation,
+
 
         }
         await fetch('/api/profile-password', {
@@ -84,4 +84,68 @@ btnUpdatePassword.addEventListener('click', async (event) => {
     }
 
     event.preventDefault();
+});*/
+
+
+
+let form = document.getElementById('form-login');
+
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // Input à valider
+    let password = document.getElementById('InputPassword1');
+
+        let passwordRegister = document.getElementById('InputPassword1').value;
+        let passwordConfirmation = document.getElementById('InputPassword2').value;
+
+    // Champs d'erreur pour afficher les messages
+    //d'erreurs
+    let passwordErrorField = document.getElementById('password-error-field');
+
+    // Fonction de validation
+    const validatePassword = () => {
+        if (password.validity.valid) {
+            passwordErrorField.innerText = '';
+
+            // Retirer les classe CSS s'il n'y a pas d'erreur
+            passwordErrorField.classList.remove('active');
+            password.classList.remove('active');
+        }
+        else {
+            if (password.validity.valueMissing) {
+                passwordErrorField.innerText = 'Veuillez entrer votre mot de passe.';
+            }
+            else if (password.validity.tooShort) {
+                passwordErrorField.innerText = 'Votre mot de passe est trop court.';
+            }
+
+            // Ajouter les classe CSS s'il y a des erreurs
+            passwordErrorField.classList.add('active');
+            password.classList.add('active');
+        }
+    };
+    password.addEventListener('input', validatePassword);
+    password.addEventListener('blur', validatePassword);
+    form.addEventListener('submit', validatePassword);
+
+
+    if(form.checkValidity()){
+        
+    
+    
+        if (passwordRegister === passwordConfirmation) {
+            let data = {
+                passwordRegister: passwordRegister,
+    
+    
+            }
+            await fetch('/api/profile-password', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+    
+        } 
+    }
 });
