@@ -1,13 +1,5 @@
 let categorie = document.getElementsByClassName('categorie');
 
-
-
-let test = document.getElementById('test');
-test.addEventListener('click', () => {
-    let categorie = document.getElementsByClassName('categorie');
-});
-
-
 const ouvrirCategory = async (event) => {
 
     let idCategory = parseInt(event.currentTarget.id);

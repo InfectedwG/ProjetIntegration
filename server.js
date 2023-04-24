@@ -562,16 +562,12 @@ app.post('/api/place-order', async (request, response) => {
 //-----------------------------------Connexion/Deconnexion/Inscription---------------------------------------
 app.post('/inscription', async (request, response, next) => {
     //valider les donner recu du client
-    if (/*validationInscription(request.body)*/true) {
+    if (validationInscription(request.body)) {
 
         try {
             let user_id = await model.addUserBasicDB(request.body.email, request.body.password, request.body.prenom, request.body.nom);
 
-
-            let user = await model.getUserById(user_id);
-
             response.status(201).end();
-            //response.pushJson(user, 'update-new-user');
         }
         catch (error) {
             if (error.code === 'SQLITE_CONSTRAINT') {
@@ -589,7 +585,7 @@ app.post('/inscription', async (request, response, next) => {
 
 app.post('/connexion', (request, response, next) => {
     //valider les donner recu du client
-    if (/*validationConnexion(request.body)*/ true) {
+    if (validationConnexion(request.body)) {
         passport.authenticate('local', (error, email, info) => {
             if (error) {
                 next(error);

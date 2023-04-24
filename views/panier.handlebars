@@ -69,11 +69,7 @@
                     </tbody>
                     <tfoot>
                         <td colspan="6">
-                            <div class="flex w100 spacer">
-                                <div class="flex left">
-                                    <input type="text" class="padding10 mr-2" placeholder="Coupon code" />
-                                    <input type="button" class="btn btn-dark" value="APPLY COUPON" />
-                                </div>
+                            <div class="flex w100 spacer">                                
                                 <div class="flex right lastbtn">
                                     <input type="button" class="btn btn-secondary" value="UPDATE CART"
                                         id="update-cart-btn" />
@@ -92,7 +88,7 @@
                         {{#each pruductsbycategorie}}
 
                         <div class="col-4 products">
-                            <button class="produits-recommander" id="{{this.id}}">
+                            <button class="produits-recommander" id="{{this.id}}" style="border: none;">
                                 <div class="product-container">
                                     <a href="#">
                                         <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded"

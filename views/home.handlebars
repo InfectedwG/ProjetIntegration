@@ -8,7 +8,6 @@
       <div class="carousel-caption d-none d-md-block">
         <h1 class="h3">SAY GOODBYE TO ARTIFICIAL ADDITIVES</h1>
         <p>Hello to wholesome nutrition with our natural cat food options</p>
-        <button type="button" class="btn btn-primary btn-sm">READ MORE</button>
       </div>
     </div>
   </div>
@@ -16,7 +15,6 @@
   <div class="carousel-caption d-md-none">
     <h1 class="h3">SAY GOODBYE TO ARTIFICIAL ADDITIVES</h1>
     <p>Hello to wholesome nutrition with our natural cat food options</p>
-    <button type="button" class="btn btn-primary btn-sm">READ MORE</button>
   </div>
 
 </div>
@@ -37,23 +35,11 @@
 
 <div class="container py-3">
   <img src="/img/home/A.png" class="img-fluid w-100 a-img" alt="...">
-  <ul class="nav justify-content-end mt-3">
-    <li class="nav-item me-3">
-      <button id="test">
-        <a class="btn btn-outline-secondary btn-sm" aria-current="page" id="test">PRODUCT CATEGORIES</a>
-      </button>
-    </li>
-    <li class="nav-item me-3">
-      <a class="btn btn-outline-secondary btn-sm" href="#">BEST SELLERS</a>
-    </li>
-    <li class="nav-item me-3">
-      <a class="btn btn-outline-secondary btn-sm" href="#">SALE PRODUCTS</a>
-    </li>
-  </ul>
+  
   <div class="row mt-3">
     {{#each categories}}
     <div class="col-6 col-md-3 py-3">
-      <button class="categorie" id="{{this.id}}">
+      <button class="categorie" id="{{this.id}}" style="border: none;">
         <div class="card h-100 border-0">
           <img src="/img/home/{{this.img_name}}" class="card-img-top img-fluid" alt="...">
           <div class="card-body text-center">
