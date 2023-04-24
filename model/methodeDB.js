@@ -292,23 +292,17 @@ export const updateUserShippingInfoDB = async (address_info, user_id) => {
 
     if(await checkIfAddressExistsDB(address_info)) {
         address_id = await checkIfAddressExistsDB(address_info);
-        console.log('if');
-        console.log(address_id);
     }
     else {
         address_id = await insertNewAddressDB(address_info);
-        console.log('else');
-        console.log(address_id);
     }
-    console.log('after');
-    console.log(address_id);
 
     let resultat = await connexion.run(
         `
         update Users
         set shipping_address_id = ?
         where id = ?;
-        `, [address_id.id, user_id]
+        `, [address_id, user_id]
     );
     return resultat.lastID;
 }
@@ -326,7 +320,7 @@ export const updateUserBillingInfoDB = async (address_info, user_id) => {
         update Users
         set billing_address_id = ?
         where id = ?;
-        `, [address_id.id, user_id]
+        `, [address_id, user_id]
     );
     return resultat.lastID;
 }
@@ -494,50 +488,21 @@ export const runGabaritDB = async () => {
 }
 
 
-export const updateUser = async (user_id, first_name, last_name, email, street_address, appartment, city, postal_code, province_state, country) => {
+export const updateUserInfo = async (userInfo, user_id) => {
     let connexion = await connectionPromise;
 
-    // Hash le mot de passe si une nouvelle valeur est fournie
-    //let passwordHashed = password ? await hash(password, 10) : undefined;
-
-    // Récupère l'ID de l'adresse d'expédition de l'utilisateur
-    let shippingAddress = await connexion.get(
-        `
-        select shipping_address_id
-        from Users
-        where id = ?
-        `, [user_id]
-    );
-
-
-
-    // Met à jour l'adresse d'expédition de l'utilisateur
-    if (shippingAddress) {
-        await connexion.run(
-            `
-            update Addresses
-            set street_address = ?,
-                appartment = ?,
-                city = ?,
-                postal_code = ?,
-                province_state = ?,
-                country = ?
-            where id = ?
-            `, [street_address, appartment, city, postal_code, province_state, country, shippingAddress.shipping_address_id]
-        );
-    }
-
     // Met à jour les informations de base de l'utilisateur
-    await connexion.run(
+    let resultat = await connexion.run(
         `
         update Users
         set first_name = ?,
             last_name = ?,
             email = ?
-            
         where id = ?
-        `, [first_name, last_name, email, user_id]
+        `, [userInfo.first_name, userInfo.last_name, userInfo.email, user_id]
     );
+
+    return resultat.lastID;
 }
 
 

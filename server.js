@@ -208,8 +208,13 @@ app.get('/profile', async (request, response) => {
             }
         }
 
+        let shippingInfo = await model.getShippingInfoByAddressIdDB(request.user.shipping_address_id);
 
-        let user = await model.getAdresseById(request.user.id);
+        // country is either canada or usa, nothing else
+        let countryShipping = false;
+        if (shippingInfo.country == 'CA') countryShipping = true;
+
+
         let commandes = await model.getAllCommands(request.user.id);
 
         for (let c of commandes) {
@@ -240,7 +245,9 @@ app.get('/profile', async (request, response) => {
             titre: "(profil de l'utilisateur)",
             styles: ['/css/profile.css'],
             scripts: ['/js/profile.js'],
-            user: user,
+            user: request.user,
+            countryShipping: countryShipping,
+            shippingInfo: shippingInfo,
             commandes: commandes,
             headerCart: headerCart,
             headerCategories: await model.getCategoriesDB(),
@@ -287,8 +294,8 @@ app.get('/privacy-policy', async (request, response) => {
 app.get('/panier', async (request, response) => {
 
     let orderStatus = false;
-    
-    if(request.query){
+
+    if (request.query) {
         orderStatus = request.query.order_status;
     }
 
@@ -409,9 +416,9 @@ app.get('/checkout', async (request, response) => {
             user: request.user,
             cartAccess: cartAccess,
             countryShipping: countryShipping,
-            countryBilling: countryBilling,
             shipping_info: shippingInfo,
             billing_info: billingInfo,
+            countryBilling: countryBilling,
             user: request.user,
         });
     }
@@ -429,14 +436,14 @@ app.patch('/api/update_cart', async (request, response) => {
         let cart = await model.getCartIdByUserIdDB(request.user.id);
         let cart_id = cart.id;
 
-        
-        
+
+
         for (let item of cartItems) {
 
             if (item.quantity === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
 
             else {
-                await model.updateCartItemsByProductIdAndCartIdDB(cart_id, item.product_id, item.quantity, item.is_selected);                
+                await model.updateCartItemsByProductIdAndCartIdDB(cart_id, item.product_id, item.quantity, item.is_selected);
             }
         }
         let cartItemsUpdated = await model.getCartListItemsByUserIdDB(request.user.id);
@@ -448,7 +455,7 @@ app.patch('/api/update_cart', async (request, response) => {
             subtotal += productSubtotal;
         }
 
-        let taxAmount = taxRate*subtotal;
+        let taxAmount = taxRate * subtotal;
         let total = subtotal * (1 + taxRate);
 
         let headerCart = await serveur.headerCartMethode(request.user);
@@ -534,14 +541,14 @@ app.post('/api/place-order', async (request, response) => {
 
             let billingInfo = await model.getBillingInfoByAddressIdDB(request.user.billing_address_id);
             if (!_.isEqual(billingInfo, request.body.billingInfo)) await model.updateUserBillingInfoDB(request.body.billingInfo, request.user.id);
-            
+
             let order_id = await model.placeOrderDB(request.user.id, 0.0, total, todayEpoch);
             if (order_id) {
                 for (let item of orderItems) {
                     await model.insertOrderDetailsDB(order_id, item.product_id, item.quantity);
                     await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
                 }
-                response.status(201).json({order_status: true}).end();
+                response.status(201).json({ order_status: true }).end();
             }
             else response.status(403).json({ message: "erreur order_id" }).end();
         }
@@ -617,20 +624,31 @@ app.get('/deconnexion', (request, response, next) => {
         }
     })
 });
+//-----------------------------------------------------------------------------------------
 
-app.patch('/api/profile', async (request, response) => {
+app.patch('/api/update-info', async (request, response) => {
 
     if (request.user && request.user.access_id === 1) {
+        let incomingUserInfo = request.body[0];
+        let incomingShippingInfo = request.body[1];
+
+        let currentUserInfo = {
+            first_name: request.user.first_name,
+            last_name: request.user.last_name,
+            email: request.user.email,
+        }
 
         try {
             if (!request.user) {
                 return response.status(404).json({ message: 'Utilisateur non trouvé' });
             }
 
-            console.log(request.body);
-            await model.updateUser(request.user.id, request.body.prenom, request.body.nom, request.body.email, request.body.adresse, request.body.appart, request.body.ville, request.body.postalCode, request.body.province, request.body.pays);
+            let currentShippingInfo = await model.getShippingInfoByAddressIdDB(request.user.shipping_address_id);
+            if (!_.isEqual(currentShippingInfo, incomingShippingInfo)) await model.updateUserShippingInfoDB(incomingShippingInfo, request.user.id);
+            
+            if(!_.isEqual(currentUserInfo, incomingUserInfo)) await model.updateUserInfo(incomingUserInfo, request.user.id);
 
-            let user = await model.getUserById(request.user.id);
+            let user = await model.getAdresseById(request.user.id);
             // Renvoyer la réponse
             response.status(201).json(user).end();
         } catch (error) {
@@ -647,23 +665,23 @@ app.patch('/api/profile-password', async (request, response) => {
 
     if (request.user && request.user.access_id === 1) {
 
-        if(validatePassword(request.body.password))
+        if (validatePassword(request.body.password))
 
-        try {
-            if (!request.user) {
-                return response.status(404).json({ message: 'Utilisateur non trouvé' });
+            try {
+                if (!request.user) {
+                    return response.status(404).json({ message: 'Utilisateur non trouvé' });
+                }
+
+                console.log(request.body);
+                await model.updateUserPassword(request.user.id, request.body.passwordRegister);
+
+                let user = await model.getUserById(request.user.id);
+                // Renvoyer la réponse
+                response.status(201).json(user).end();
+            } catch (error) {
+                console.error(error);
+                response.status(500).json({ message: 'Erreur serveur' });
             }
-
-            console.log(request.body);
-            await model.updateUserPassword(request.user.id, request.body.passwordRegister);
-
-            let user = await model.getUserById(request.user.id);
-            // Renvoyer la réponse
-            response.status(201).json(user).end();
-        } catch (error) {
-            console.error(error);
-            response.status(500).json({ message: 'Erreur serveur' });
-        }
     }
     else {
         response.status(403).end();

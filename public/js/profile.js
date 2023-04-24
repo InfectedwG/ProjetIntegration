@@ -1,5 +1,21 @@
 let btnUpdateUser = document.getElementById("Update-user");
 let btnUpdatePassword = document.getElementById("Update-password");
+let canadaShip = document.getElementById('check-canada-ship');
+let usaShip = document.getElementById('check-usa-ship');
+
+const checkCountry = (inputChanged, otherInput) => {
+    if (inputChanged.checked) otherInput.checked = false;
+    else otherInput.checked = true;
+}
+
+canadaShip.addEventListener('change', () => {
+    checkCountry(canadaShip, usaShip);
+});
+usaShip.addEventListener('change', () => {
+    checkCountry(usaShip, canadaShip);
+});
+
+
 
 btnUpdateUser.addEventListener('click', async (event) => {
 
@@ -11,22 +27,30 @@ btnUpdateUser.addEventListener('click', async (event) => {
     let adresse = document.getElementById('InputAdresse').value;
     let ville = document.getElementById('InputVille').value;
     let province = document.getElementById('InputProvince').value;
-    let pays = document.getElementById('InputPays').value;
     let postalCode = document.getElementById('InputCodePostale').value;
+    let country;
+    if (canadaShip.checked) country = 'CA';
+    else country = 'US';
 
-    let data = {
-        nom: nom,
-        prenom: prenom,
-        email: email,
-        appart: appart,
-        adresse: adresse,
-        ville: ville,
-        province: province,
-        pays: pays,
-        postalCode: postalCode,
-    }
+    
 
-    await fetch('/api/profile', {
+    let data = [
+        {
+            first_name: prenom,
+            last_name: nom,
+            email: email,
+        },
+        {
+            appartment: appart,
+            street_address: adresse,
+            city: ville,
+            province_state: province,
+            country: country,
+            postal_code: postalCode,
+        }
+    ]
+
+    await fetch('/api/update-info', {
 
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

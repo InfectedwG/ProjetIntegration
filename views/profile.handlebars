@@ -18,8 +18,9 @@
                         prenom : {{user.first_name}}
                     </li>
                     <li class="list-group-item" id="adresseInfo">
-                        Adresse : {{user.appartment}}, {{user.street_address}}, {{user.city}}, {{user.province_state}},
-                        {{user.country}}, {{user.postal_code}}
+                        Adresse : {{shippingInfo.appartment}}, {{shippingInfo.street_address}}, {{shippingInfo.city}},
+                        {{shippingInfo.province_state}},
+                        {{shippingInfo.country}}, {{shippingInfo.postal_code}}
                     </li>
                     <li class="list-group-item" id="emailInfo">
                         Adresse Email : {{user.email}}
@@ -54,28 +55,36 @@
 
                 <div class="mb-3">
                     <label for="InputAppartement" class="form-label">Appartement</label>
-                    <input type="text" class="form-control" value="{{user.appartment}}" id="InputAppartement">
+                    <input type="text" class="form-control" value="{{shippingInfo.appartment}}" id="InputAppartement">
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAdresse" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" value="{{user.street_address}}" id="InputAdresse">
+                    <input type="text" class="form-control" value="{{shippingInfo.street_address}}" id="InputAdresse">
                 </div>
                 <div class="mb-3">
                     <label for="InputVille" class="form-label">Ville</label>
-                    <input type="text" class="form-control" value="{{user.city}}" id="InputVille">
+                    <input type="text" class="form-control" value="{{shippingInfo.city}}" id="InputVille">
                 </div>
                 <div class="mb-3">
                     <label for="InputProvince" class="form-label">Province</label>
-                    <input type="text" class="form-control" value="{{user.province_state}}" id="InputProvince">
+                    <input type="text" class="form-control" value="{{shippingInfo.province_state}}" id="InputProvince">
                 </div>
                 <div class="mb-3">
-                    <label for="InputPays" class="form-label">Pays</label>
-                    <input type="text" class="form-control" value="{{user.country}}" id="InputPays">
+                    <label for="check-usa" class="form-label">United States</label>
+                    <input type="checkbox" class="form-usa" id="check-usa-ship" {{#unless
+                        countryShipping}}checked{{/unless}}>
+
+                    <label for="check-canada" class="form-label">Canada</label>
+                    <input type="checkbox" class="form-canada" id="check-canada-ship" {{#if
+                        countryShipping}}checked{{/if}}>
+                    <div class="invalid-feedback">
+                        Please select a country.
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="InputCodePostale" class="form-label">Code Postale</label>
-                    <input type="text" class="form-control" value="{{user.postal_code}}" id="InputCodePostale">
+                    <input type="text" class="form-control" value="{{shippingInfo.postal_code}}" id="InputCodePostale">
                 </div>
                 <button type="submit" id="Update-user" class="btn btn-primary">Submit</button>
             </form>
@@ -85,13 +94,15 @@
             <form>
                 <div class="mb-3">
                     <label for="InputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1" pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1"
+                        pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
                     <div id="InputPassword1" class="form-text">Must be 8-20 characters long.</div>
 
                 </div>
                 <div class="mb-3">
                     <label for="InputPassword2" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2" pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
+                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2"
+                        pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
                     <div id="InputPassword2" class="form-text">Must be 8-20 characters long.</div>
                 </div>
                 <button type="submit" id="Update-password" class="btn btn-primary">Submit</button>
