@@ -1,3 +1,5 @@
+import * as validation from "./methodeCommune.js";
+
 let firstnameRegister = document.getElementById('firstname-register');
 let lastnameRegister = document.getElementById('lastname-register');
 let emailRegister = document.getElementById('email-register');
@@ -12,7 +14,9 @@ let loginForm = document.getElementById('login-form');
 let signupSuccessful = document.getElementById('inscription-successful');
 
 
-const submitRegister = async () => {
+
+
+const submitRegister = async (errorCourriel) => {
 
     let data;
 
@@ -28,7 +32,7 @@ const submitRegister = async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-    
+
         if (response.ok) {
             //window.location.replace('/connexion');
             signupSuccessful.style.display = 'block';
@@ -36,23 +40,23 @@ const submitRegister = async () => {
         else if (response.status === 409) {
             //Afficher erreur dans l'interface graphique
             console.log('Utilisateur deja existant');
-    
+
             // Si l'utilisateur se connect avec un compte qui n'exsite pas
-            //errorCourriel.innerText = "Il y a deja un utilisateur avec cette adress courriel";
-            //errorCourriel.style.display = 'block';
+            errorCourriel.innerText = "Il y a deja un utilisateur avec cette adress courriel";
+            errorCourriel.style.display = 'block';
         }
         else {
             console.log('Erreur inconnu');
         }
-    
+
     }
 
-    
+
 
 }
 
 
-const submitLogin = async () => {
+const submitLogin = async (loginError) => {
 
     let data = {
         email: emailLogin.value,
@@ -71,8 +75,16 @@ const submitLogin = async () => {
     else if (response.status === 401) {
         let info = await response.json();
 
-        //Afficher erreur dans l'interface graphine
-        console.log(info);
+        //Afficher erreur dans l'interface graphique
+
+        if (info.erreur) {
+            loginError.innerText = 'Email non existant ou mot de passe erronee';
+            loginError.style.display = 'block';
+        }
+        else {
+            loginError.innerText = 'Erreur inconnu';
+            loginError.style.display = 'block';
+        }
 
         // Si l'utilisateur se connect avec un compte qui n'exsite pas
         //errorCourriel.innerText = "Soit le courriel ou le mot de passe a une erreur. Ou ce compte n'exsite pas";
@@ -86,15 +98,21 @@ const submitLogin = async () => {
 //------------------------------------------Validation----------------------------------------------------------
 
 registerForm.addEventListener('submit', async (event) => {
-
     event.preventDefault();
-    /*
-    validationFirstname();
-    validationLastname();
-    validationEmailregister();
-    validationPasswordRegister();
-    */
-    await submitRegister();
+
+    let errorLastname = document.getElementById('first-error');
+    let errorFirstname = document.getElementById('last-error');
+    let errorEmail = document.getElementById('email-register-error');
+    let errorPassword = document.getElementById('password-register-error');
+
+    if (validation.validationFirstname(firstnameRegister, errorFirstname) &&
+        validation.validationLastname(lastnameRegister, errorLastname) &&
+        validation.validationEmailregister(emailRegister, errorEmail) &&
+        validation.validationPasswordRegister(passwordRegister, passwordConfirmation, errorPassword)) {
+            await submitRegister(errorEmail);
+    }
+
+    
 });
 
 
@@ -102,10 +120,16 @@ registerForm.addEventListener('submit', async (event) => {
 
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    /*
-    validationEmailLogin();
-    validationPasswordLogin();
-    */
-    await submitLogin();
+
+    let passwordError = document.getElementById('password-error');
+    let emailError = document.getElementById('email-login-error');
+    let loginError = document.getElementById('login-error');
+
+    if(validation.validationEmailLogin(passwordLogin, passwordError) &&
+    validation.validationPasswordLogin(emailLogin, emailError)){
+        await submitLogin(loginError);
+    }
+
+    
 });
 

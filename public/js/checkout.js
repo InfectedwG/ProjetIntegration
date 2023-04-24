@@ -1,3 +1,5 @@
+import * as validation from "./methodeCommune.js";
+
 let differentAddress = document.getElementById('different-address');
 let btnDifferent = document.getElementById('checkbox-different');
 let btnTos = document.getElementById('agreement-tos');
@@ -9,8 +11,6 @@ let appartmentInputShip = document.getElementById('appartment-ship');
 let cityInputShip = document.getElementById('city-ship');
 let provinceInputShip = document.getElementById('province-ship');
 let zipcodeInputShip = document.getElementById('zipcode-ship');
-let phoneInputShip = document.getElementById('phone-ship');
-let notesInputShip = document.getElementById('delivery-notes');
 let canadaShip = document.getElementById('check-canada-ship');
 let usaShip = document.getElementById('check-usa-ship');
 
@@ -43,63 +43,85 @@ btnDifferent.addEventListener('change', () => {
     else differentAddress.disabled = false;
 });
 
+let agreement = document.getElementById('agreement-tos');
+if(!agreement.checked){
+    btnOrder.disabled = true;
+}
+agreement.addEventListener('change', () => {
+    if(!agreement.checked){
+        btnOrder.disabled = true;
+    }
+    else btnOrder.disabled = false;
+});
+
 
 btnOrder.addEventListener('click', async () => {
     let orderTotal = document.getElementById('order-total');
     let country;
 
-    
+    let errorAddress = document.getElementById('address-error');
+    let errorCity = document.getElementById('city-error');
+    let errorProvince = document.getElementById('province-error');
+    let errorCodePostal = document.getElementById('zipcode-error');
 
-    if (canadaShip.checked) country = 'CA';
-    else country = 'US';
+    if (validation.validateStreeAddress(addressInputShip, errorAddress) &&
+        validation.validateCity(cityInputShip, errorCity) &&
+        validation.validateProvince(provinceInputShip, errorProvince) &&
+        validation.validationCodePostal(zipcodeInputShip, errorCodePostal)) {
+        if (canadaShip.checked) country = 'CA';
+        else country = 'US';
 
-    let shipping_address = {
-        street_address: addressInputShip.value,
-        appartment: appartmentInputShip.value,
-        city: cityInputShip.value,
-        postal_code: zipcodeInputShip.value,
-        province_state: provinceInputShip.value,
-        country: country
-    }
-
-    if (canadaBill.checked) country = 'CA';
-    else country = 'US';
-
-    let billing_address = {
-        street_address: addressInputBill.value,
-        appartment: appartmentInputBill.value,
-        city: cityInputBill.value,
-        postal_code: zipcodeInputBill.value,
-        province_state: provinceInputBill.value,
-        country: country
-    }    
-
-    let data = {
-        shippingInfo: shipping_address,
-        billingInfo: billing_address,
-    }
-
-    console.log(data);
-
-    if (orderTotal.innerText != '0.0') {
-
-        let response = await fetch('/api/place-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        if(response.status === 201){
-            let status = await response.json();
-            let statusQueryString = new URLSearchParams(status).toString();
-            window.location.href = `/panier?${statusQueryString}`;
-        }
-        else{
-            console.log(await response.json());
+        let shipping_address = {
+            street_address: addressInputShip.value,
+            appartment: appartmentInputShip.value,
+            city: cityInputShip.value,
+            postal_code: zipcodeInputShip.value,
+            province_state: provinceInputShip.value,
+            country: country
         }
 
-        
+        if (canadaBill.checked) country = 'CA';
+        else country = 'US';
+
+        let billing_address = {
+            street_address: addressInputBill.value,
+            appartment: appartmentInputBill.value,
+            city: cityInputBill.value,
+            postal_code: zipcodeInputBill.value,
+            province_state: provinceInputBill.value,
+            country: country
+        }
+
+        let data = {
+            shippingInfo: shipping_address,
+            billingInfo: billing_address,
+        }
+
+
+        if (orderTotal.innerText != '0.0') {
+
+            let response = await fetch('/api/place-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (response.status === 201) {
+                let status = await response.json();
+                let statusQueryString = new URLSearchParams(status).toString();
+                window.location.href = `/panier?${statusQueryString}`;
+            }
+            else {
+                console.log(await response.json());
+            }
+
+
+        }
+        else console.log('vous n\'avez aucun item a commander');
     }
-    else console.log('vous n\'avez aucun item a commander');
+
+
+
+
 });
 
 canadaShip.addEventListener('change', () => {
@@ -115,3 +137,7 @@ canadaBill.addEventListener('change', () => {
 usaBill.addEventListener('change', () => {
     checkCountry(usaBill, canadaBill)
 });
+
+const validationAddresseForm = () => {
+
+}

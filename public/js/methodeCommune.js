@@ -9,7 +9,7 @@ export const updateHeaderCart = (headerCartServeur) => {
 
 //------------------------------------------Validation----------------------------------------------------------
 
-export const validationLastname = () => {
+export const validationLastname = (lastnameRegister, errorNom) => {
     if (lastnameRegister.validity.valid) {
         errorNom.style.display = 'none';
     }
@@ -22,7 +22,7 @@ export const validationLastname = () => {
 
 // Validation du prenom
 
-export const validationFirstname = () => {
+export const validationFirstname = (firstnameRegister, errorPrenom) => {
     if (firstnameRegister.validity.valid) {
         errorPrenom.style.display = 'none';
     }
@@ -36,11 +36,13 @@ export const validationFirstname = () => {
 //  validation du courriel inscription
 
 
-export const validationEmailregister = () => {
+export const validationEmailregister = (emailRegister, errorCourriel) => {
     let example = "example@gmail.com";
+    let valid = false;
 
     if (emailRegister.validity.valid) {
         errorCourriel.style.display = 'none';
+        valid = true;
     }
     // Validation si le champ de courriel ne respect pas le parttern
     else if (emailRegister.validity.typeMismatch) {
@@ -56,13 +58,17 @@ export const validationEmailregister = () => {
         errorCourriel.innerText = "Votre courriel n'est pas valide. Fait sur de mettre .ca ou .com, etc"
         errorCourriel.style.display = 'block'
     }
+
+    return valid;
 }
 
 //  validation du mot de passe inscription
 
-export const validationPasswordRegister = () => {
+export const validationPasswordRegister = (passwordRegister, passwordConfirmation, errorPassword) => {
+    let valid = false
     if (passwordRegister.validity.valid) {
         errorPassword.style.display = 'none';
+        valid = true
     }
     // Validation si le mot de passe est trop long
     else if (passwordRegister.validity.tooShort) {
@@ -84,14 +90,23 @@ export const validationPasswordRegister = () => {
         errorPassword.innerText = "Le mot de passe n'est pas valide. Fait sur qui a une masjucule et un caratere special";
         errorPassword.style.display = 'block';
     }
+    else if(passwordConfirmation.value != passwordRegister.value){
+        errorPassword.innerText = 'mots de passes non-identiques';
+        errorPassword.style.display = 'block';
+    }
+
+    return valid;
 }
 
 
 // Validation du courriel connexion
 
-export const validationEmailLogin = () => {
+export const validationEmailLogin = (emailRegister, errorCourriel) => {
+    let valid = false;
+
     if (emailRegister.validity.valid) {
         errorCourriel.style.display = 'none';
+        valid = true;
     }
     else if (emailRegister.validity.typeMismatch) {
         errorCourriel.innerText = 'Entrer un courriel valide ex: "test@test.com"';
@@ -101,16 +116,88 @@ export const validationEmailLogin = () => {
         errorCourriel.innerText = 'Entrer votre courriel';
         errorCourriel.style.display = 'block';
     }
+
+    return valid;
 }
 
 // Validation du mot de passe connexion
 
-export const validationPasswordLogin = () => {
+export const validationPasswordLogin = (passwordLogin, errorPassword) => {
+    let valid = false;
+
     if (passwordLogin.validity.valid) {
         errorPassword.style.display = 'none';
+        valid = true
     }
     else if (passwordLogin.validity.valueMissing) {
         errorPassword.innerText = 'Entrer votre mot de passe';
         errorPassword.style.display = 'block';
     }
+
+    return valid;
+}
+
+
+export const validateStreeAddress = (address, error) => {
+    let valid = false;
+
+    if (address.validity.valid) {
+        error.style.display = 'none';
+        valid = true
+    }
+    else if (address.validity.valueMissing) {
+        error.innerText = 'Entrer votre adresse';
+        error.style.display = 'block';
+    }
+
+    return valid;
+}
+
+export const validateCity = (city, error) => {
+    let valid = false;
+
+    if (city.validity.valid) {
+        error.style.display = 'none';
+        valid = true
+    }
+    else if (city.validity.valueMissing) {
+        error.innerText = 'Entrer la ville';
+        error.style.display = 'block';
+    }
+
+    return valid;
+}
+
+export const validateProvince = (province, error) => {
+    let valid = false;
+
+    if (province.validity.valid) {
+        error.style.display = 'none';
+        valid = true
+    }
+    else if (province.validity.valueMissing) {
+        error.innerText = 'Entrer la ville';
+        error.style.display = 'block';
+    }
+
+    return valid;
+}
+
+export const validationCodePostal = (codePostal, error) => {
+    let valid = false;
+
+    if (codePostal.validity.valid) {
+        error.style.display = 'none';
+        valid = true;
+    }
+    else if (codePostal.validity.typeMismatch) {
+        error.innerText = 'Entrer un code postal valide ex: "1A1 A1A"';
+        error.style.display = 'block';
+    }
+    else if (codePostal.validity.valueMissing) {
+        error.innerText = 'Entrer votre courriel';
+        error.style.display = 'block';
+    }
+
+    return valid;
 }

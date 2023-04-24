@@ -6,6 +6,8 @@ let tax = document.getElementById('cart-tax');
 let updateCartBtn = document.getElementById('update-cart-btn');
 let checkoutBtn = document.getElementById('btn-checkout');
 
+let produits = document.getElementsByClassName('produits');
+if(produits.length === 0) checkoutBtn.disabled = true;
 
 const updateCart = async () => {
 
@@ -38,7 +40,6 @@ const updateCart = async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
-    console.log('test');
 
     if (response.status === 201) {
         let cartItemsUpdated = await response.json();
@@ -181,9 +182,6 @@ const ouvrirProduit = async (event) => {
     let queryString = new URLSearchParams(data).toString();
 
     window.location.href = `/product?${queryString}`;
-
-    console.log(queryString);
-    console.log(idProduit);
 }
 
 

@@ -64,6 +64,12 @@ button[type="submit"]:hover {
     color: red;
 }
 
+.error-field {
+    display: none;
+    background-color: #800;
+    color: #fff;
+}
+
 @media screen and (max-width: 480px) {
     form {
         max-width: 300px;

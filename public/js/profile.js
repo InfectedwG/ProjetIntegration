@@ -1,7 +1,11 @@
+import * as validation from "./methodeCommune.js";
+
 let btnUpdateUser = document.getElementById("Update-user");
 let btnUpdatePassword = document.getElementById("Update-password");
 let canadaShip = document.getElementById('check-canada-ship');
 let usaShip = document.getElementById('check-usa-ship');
+
+let updateInfoForm = document.getElementById('update-info-form');
 
 const checkCountry = (inputChanged, otherInput) => {
     if (inputChanged.checked) otherInput.checked = false;
@@ -17,75 +21,68 @@ usaShip.addEventListener('change', () => {
 
 
 
-btnUpdateUser.addEventListener('click', async (event) => {
+updateInfoForm.addEventListener('submit', async (event) => {
+    console.log('test');
+
+    event.preventDefault();
 
 
-    let nom = document.getElementById('InputNom').value;
-    let prenom = document.getElementById('InputPrenom').value;
-    let email = document.getElementById('InputEmail').value;
-    let appart = document.getElementById('InputAppartement').value;
-    let adresse = document.getElementById('InputAdresse').value;
-    let ville = document.getElementById('InputVille').value;
-    let province = document.getElementById('InputProvince').value;
-    let postalCode = document.getElementById('InputCodePostale').value;
+    let nom = document.getElementById('InputNom');
+    let prenom = document.getElementById('InputPrenom');
+    let email = document.getElementById('InputEmail');
+    let appart = document.getElementById('InputAppartement');
+    let adresse = document.getElementById('InputAdresse');
+    let ville = document.getElementById('InputVille');
+    let province = document.getElementById('InputProvince');
+    let postalCode = document.getElementById('InputCodePostale');
     let country;
     if (canadaShip.checked) country = 'CA';
     else country = 'US';
 
-    
-
-    let data = [
-        {
-            first_name: prenom,
-            last_name: nom,
-            email: email,
-        },
-        {
-            appartment: appart,
-            street_address: adresse,
-            city: ville,
-            province_state: province,
-            country: country,
-            postal_code: postalCode,
-        }
-    ]
-
-    await fetch('/api/update-info', {
-
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-
-    });
-
-    event.preventDefault();
-});
-
-/*
-btnUpdatePassword.addEventListener('click', async (event) => {
 
 
-    let passwordRegister = document.getElementById('InputPassword1').value;
-    let passwordConfirmation = document.getElementById('InputPassword2').value;
+    let errorLastname = document.getElementById('first-error');
+    let errorFirstname = document.getElementById('last-error');
+    let errorEmail = document.getElementById('email-error');
+    let errorAddress = document.getElementById('password-register-error');
+    let errorCity = document.getElementById('city-error');
+    let errorProvince = document.getElementById('province-error');
+    let errorCodePostal = document.getElementById('zipcode-error');
 
+    if (validation.validationFirstname(prenom, errorFirstname) &&
+        validation.validationLastname(nom, errorLastname) &&
+        validation.validationEmailregister(email, errorEmail) &&
+        validation.validateStreeAddress(adresse, errorAddress) &&
+        validation.validateCity(ville, errorCity) &&
+        validation.validateProvince(province, errorProvince) &&
+        validation.validationCodePostal(postalCode, errorCodePostal)) {
 
-    if (passwordRegister === passwordConfirmation) {
-        let data = {
-            passwordRegister: passwordRegister,
+        let data = [
+            {
+                first_name: prenom.value,
+                last_name: nom.value,
+                email: email.value,
+            },
+            {
+                appartment: appart.value,
+                street_address: adresse.value,
+                city: ville.value,
+                province_state: province.value,
+                country: country,
+                postal_code: postalCode.value,
+            }
+        ]
 
+        await fetch('/api/update-info', {
 
-        }
-        await fetch('/api/profile-password', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+
         });
 
     }
-
-    event.preventDefault();
-});*/
-
+});
 
 
 let form = document.getElementById('form-login');
@@ -96,8 +93,8 @@ form.addEventListener('submit', async (event) => {
     // Input à valider
     let password = document.getElementById('InputPassword1');
 
-        let passwordRegister = document.getElementById('InputPassword1').value;
-        let passwordConfirmation = document.getElementById('InputPassword2').value;
+    let passwordRegister = document.getElementById('InputPassword1').value;
+    let passwordConfirmation = document.getElementById('InputPassword2').value;
 
     // Champs d'erreur pour afficher les messages
     //d'erreurs
@@ -130,22 +127,22 @@ form.addEventListener('submit', async (event) => {
     form.addEventListener('submit', validatePassword);
 
 
-    if(form.checkValidity()){
-        
-    
-    
+    if (form.checkValidity()) {
+
+
+
         if (passwordRegister === passwordConfirmation) {
             let data = {
                 passwordRegister: passwordRegister,
-    
-    
+
+
             }
             await fetch('/api/profile-password', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-    
-        } 
+
+        }
     }
 });

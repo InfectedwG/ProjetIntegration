@@ -404,7 +404,7 @@ app.get('/checkout', async (request, response) => {
 
         response.render('checkout', {
             titre: 'Checkout',
-            styles: ['/css/dropdown-menu.css'],
+            styles: ['/css/dropdown-menu.css', '/css/checkout.css'],
             scripts: ['/js/checkout.js'],
             orderItems: orderItems,
             subtotal: subtotal.toFixed(2),

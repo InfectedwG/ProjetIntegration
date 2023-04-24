@@ -36,39 +36,45 @@
         <div class="product-right col-5 py-3 ml-5 d-block border-left">
             <h1 class="h1 mb-3">Update Information</h1>
 
-            <form>
+            <form id="update-info-form">
 
                 <div class="mb-3">
                     <label for="InputNom" class="form-label">Nom</label>
                     <input type="text" class="form-control" value="{{user.last_name}}" id="InputNom" required>
+                    <div id="last-error" class="error-field"></div>
                 </div>
                 <div class="mb-3">
                     <label for="InputPrenom" class="form-label">Prenom</label>
                     <input type="text" class="form-control" value="{{user.first_name}}" id="InputPrenom" required>
+                    <div id="first-error" class="error-field"></div>
                 </div>
                 <div class="mb-3">
                     <label for="InputEmail" class="form-label">Email address</label>
                     <input type="email" class="form-control" value="{{user.email}}" id="InputEmail"
                         aria-describedby="emailHelp" required>
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    <div id="email-error" class="error-field"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAppartement" class="form-label">Appartement</label>
                     <input type="text" class="form-control" value="{{shippingInfo.appartment}}" id="InputAppartement">
+                    <div id="appartment-error" class="error-field"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="InputAdresse" class="form-label">Adresse</label>
-                    <input type="text" class="form-control" value="{{shippingInfo.street_address}}" id="InputAdresse">
+                    <input type="text" class="form-control" value="{{shippingInfo.street_address}}" id="InputAdresse" required>
+                    <div id="address-error" class="error-field"></div>
                 </div>
                 <div class="mb-3">
                     <label for="InputVille" class="form-label">Ville</label>
                     <input type="text" class="form-control" value="{{shippingInfo.city}}" id="InputVille" required> 
+                    <div id="city-error" class="error-field"></div>
                 </div>
                 <div class="mb-3">
                     <label for="InputProvince" class="form-label">Province</label>
                     <input type="text" class="form-control" value="{{shippingInfo.province_state}}" id="InputProvince" required>
+                    <div id="province-error" class="error-field"></div>
                 </div>
                 <div class="mb-3">
                     <label for="check-usa" class="form-label">United States</label>
@@ -85,7 +91,7 @@
                 <div class="mb-3">
                     <label for="InputCodePostale" class="form-label">Code Postale</label>
                     <input type="text" class="form-control" value="{{shippingInfo.postal_code}}" id="InputCodePostale" minlength="6" maxlength="7" pattern="^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$" aria-describedby="postalHelp" required>
-                    <div id="postalHelp" class="form-text">Exemple : H2J 1L8.</div>
+                    <div id="zipcode-error" class="error-field"></div>
                 </div>
                 
                 
@@ -97,16 +103,16 @@
             <form novalidate id="form-login">
                 <div class="mb-3">
                     <label for="InputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword1"
+                    <input type="password" class="form-control" id="InputPassword1" placeholder="new password"
                         pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
-                    <div id="InputPassword1" class="form-text">Must be 8-20 characters long.</div>
+                    <div id="password-error-field" class="error-field">Must be 8-20 characters long.</div>
 
                 </div>
                 <div class="mb-3">
                     <label for="InputPassword2" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" value="{{user.password}}" id="InputPassword2"
+                    <input type="password" class="form-control" placeholder="confirm password" id="InputPassword2"
                         pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)">
-                    <div id="InputPassword2" class="form-text">Must be 8-20 characters long.</div>
+                    <div id="password-error-field" class="error-field">Must be 8-20 characters long.</div>
                 </div>
                 <button type="submit" id="Update-password" class="btn btn-primary">Submit</button>
             </form>
