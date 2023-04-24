@@ -3,19 +3,21 @@
         Interactive
     </div>
 
-    <div class="row product-list">
-        {{#each produits}}
-        <div class="col-4 products" >
-            <button class="produits" id="{{this.id}}" >
-                <div class="product-container">
-                    <a href="#">
-                        <img src="/img/produits/{{this.id}}/main.jpg" alt="Product Image" style="width: 230px; height: 230px">
-                    </a>
+    <div class="row mt-3">
+    {{#each produits}}
+    <div class="col-6 col-md-4 col-lg-3 py-3">
+        <button class="produits" id="{{this.id}}">
+            <div class="card h-100 border-0">
+                <a href="#">
+                    <img src="/img/produits/{{this.id}}/main.jpg" class="card-img-top img-fluid" alt="..." style="width: 200px; height: 200px">
+                </a>
+                <div class="card-body">
                     <a href="#" class="product-name">{{this.name}}</a>
                     <p class="product-price">{{this.price}}</p>
                 </div>
-            </button>
-        </div>
-        {{/each}}
+            </div>
+        </button>
     </div>
+    {{/each}}
+</div>
 </div>

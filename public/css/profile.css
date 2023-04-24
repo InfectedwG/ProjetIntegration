@@ -298,3 +298,10 @@ table tr td input{
     display: block;
 }
   
+@media only screen and (max-width: 600px) {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  

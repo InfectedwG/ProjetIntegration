@@ -2,41 +2,41 @@
     <div class="container">
         <div class="row">
             <div class="col-2 p-0">
-                <a href="/"><img src="/img/header/logo.png" alt="accueil"
-                        class="img-responsive img-thumbnail border-0 p-0"></a>
+                <a href="/">
+                    <img src="/img/header/logo.png" alt="accueil" class="img-responsive img-thumbnail border-0 p-0">
+                </a>
             </div>
-            <div class="col-3"></div>
-            <nav class="navbar navbar-expand-lg navbar-light float-right" style="padding-top: 0;">
+            <nav class="navbar navbar-expand-lg navbar-light ml-auto">
+                <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    {{!-- <button class="menu-trigger" style="color: black; font-weight: bold;">
-                    COLLECTION
-                </button> --}}
-                
                     <ul class="navbar-nav">
-                        
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="padding-top: 16.7px; font-weight: bold; color: black;" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            COLLECTION
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                COLLECTION
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 {{#each headerCategories}}
                                 <a class="dropdown-item" href="/category?id_category={{this.id}}">{{this.name}}</a>
                                 {{/each}}
-
                             </div>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link  font-weight-bold" href="#" style="padding-top: 17px; color: black;">CONTACT US</a>
+                            <a class="nav-link" href="#">CONTACT US</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  font-weight-bold" href="#" style="padding-top: 17px; color: black;">ABOUT US</a>
+                            <a class="nav-link" href="#">ABOUT US</a>
                         </li>
-
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="/img/header/account.png" alt="" class="img-responsive img-thumbnail border-0 shadow-none"
-                                    style="max-height: 90%;  padding: 0;" >
+                            <a class="nav-link" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <img src="/img/header/account.png" alt=""
+                                    class="img-responsive img-thumbnail border-0 shadow-none"
+                                    style="max-height: 90%;  padding: 0;">
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
                                 {{#if user}}
@@ -46,37 +46,38 @@
                                 <a class="dropdown-item" href="/login-signup">Inscription</a>
                                 <a class="dropdown-item" href="/login-signup">Connexion</a>
                                 {{/if}}
-                                
                             </div>
-                            
+                        </li>
+                        <li class="nav-item">
+                            <a {{#if cartAccess}} href="/panier" {{else}} href="/login-signup" {{/if}}
+                                class="panier-btn" style="margin-top: 10px;">
+                                <button class="btn btn-warning"
+                                    style="background-color: orange; width: 100%; height: 55px; border-radius: 10.67px; padding: 0; padding-right: 5px; display: flex; justify-content: space-between; align-items: center;"
+                                    id="panier-btn">
+                                    <div style="width: 30%; height: 100%; display: flex; align-items: center;">
+                                        <img id="1" src="/img/header/shopping_cart_logo.png" alt=""
+                                            style="max-height: 100%; max-width: 100%; margin-right: 10px; padding-left: 5px">
+                                    </div>
+                                    <div
+                                        style="width: 70%; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+
+                                        <div style=" display: flex; flex-direction: column; align-items: flex-center;">
+                                            <p id="2"
+                                                style="margin: 0; color: white; font-size: 12px; font-weight: bold;">
+                                                Shopping Cart
+                                            </p>
+                                            <p id="panier-btn-content"
+                                                style="margin: 0; color: white; font-size: 12px; margin-top: 0.2rem; font-weight: bold; padding-left: 0;">
+                                                {{headerCart.number_of_items}} items - ${{headerCart.subtotal}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </nav>
-            
-            
-
-            <a {{#if cartAccess}} href="/panier" {{else}} href="/login-signup" {{/if}} class="panier-btn" >
-                <button class="btn btn-warning"
-                    style="background-color: orange; width: 190px; height: 55px; border-radius: 10.67px; padding: 0; padding-right: 5px; margin-top: 3px; display: flex; justify-content: space-between; align-items: center;"
-                    id="panier-btn">
-                    <div style="width: 30%; height: 100%; display: flex; align-items: center;">
-                        <img id="1" src="/img/header/shopping_cart_logo.png" alt=""
-                            style="max-height: 100%; max-width: 100%; margin-right: 10px; padding-left: 5px">
-                    </div>
-                    <div
-                        style="width: 70%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-center;">
-                        <div style="display: flex; flex-direction: column; align-items: flex-center;">
-                            <p id="2" style="margin: 0; color: white; font-size: 14px; font-weight: bold;">Shopping Cart
-                            </p>
-                            <p id="panier-btn-content"
-                                style="margin: 0; color: white; font-size: 14px; margin-top: 0.2rem; font-weight: bold; padding-left: 0;">
-                                {{headerCart.number_of_items}} items - ${{headerCart.subtotal}}
-                            </p>
-                        </div>
-                    </div>
-                </button>
-            </a>
         </div>
     </div>
 </header>

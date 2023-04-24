@@ -1,7 +1,7 @@
 <div class="container">
     <section class="section-one row border-bottom">
-        
-        <div class="product-left col-4 py-3  d-block " id="imgs-container">
+
+        <div class="col-12 col-md-4 py-3 text-center" id="imgs-container">
 
             <img src="/img/produits/{{produit.id}}/main.jpg" class="img-thumbnail rounded" alt="..."
                 style="width: 325px; height: 325px; display: block" id="main-big-img">
@@ -59,7 +59,7 @@
 
         </div>
 
-        <div class="product-right col-5 py-3 ml-5 d-block border-left ">
+        <div class="col-12 col-md-5 py-3 ml-md-5 border-left">
             <div class="border-bottom py-3">
                 <h1 class="product-title">{{produit.name}}</h1>
                 <div class="product-price" id="product-price">${{produit.price}}</div>
@@ -80,7 +80,8 @@
             <div class="quantity">
                 <label class="form-label" for="quantite">Quantité :</label>
                 <input class="col-form-label" type="number" id="quantity" name="quantite" value="1" min="1">
-                <button class="btn btn-primary mb-1" id="Cart-button" data-productid="{{produit.id}}" {{#unless cartAccess}}disabled{{/unless}}>Add to Cart</button>
+                <button class="btn btn-primary mb-1" id="Cart-button" data-productid="{{produit.id}}" {{#unless
+                    cartAccess}}disabled{{/unless}}>Add to Cart</button>
             </div>
 
             <div class="product-details">
@@ -95,12 +96,13 @@
                         <input class="form-control" id="availability" type="text"
                             value="{{#if produit.availability}}In Stock{{else}}Not Available{{/if}}" disabled readonly>
                     </div>
-                    
+
                     <div class="categories">
-                        
+
                         <label for="categories" class="form-label">Categories: </label>
-                        <input class="form-control" id="categories" type="text" value="{{categorieProduit.name}}" disabled readonly>
-                        
+                        <input class="form-control" id="categories" type="text" value="{{categorieProduit.name}}"
+                            disabled readonly>
+
                     </div>
                 </div>
             </div>
@@ -108,26 +110,32 @@
 
     </section>
 
-    <section class="section-two row border-bottom py-3">
+    <section class="section-two border-bottom py-3">
         <div class="container">
-            
             <div class="row">
-                <div class="tabs col-2">
-                    <div class="tab active border-bottom" id="description">Description</div>
-                    <div class="tab" id="information">Information</div>
-                </div>
-                <div class="tab-content col">
-                    <div class="tab-panel" id="description-content" style="display: block;">
-                        <p>{{produit.description}}</p>
+                <div class="col-12 col-md-3">
+                    <div class="tabs">
+                        <div class="tab active border-bottom mb-2" id="description">Description</div>
+                        <div class="tab mb-2" id="information">Information</div>
                     </div>
-                    <div class="tab-panel" id="information-content" style="display: none;">
-                        <p>{{produit.info}}</p>
+                </div>
+                <div class="col-12 col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-panel" id="description-content" style="display: block;">
+                            <p>{{produit.description}}</p>
+                        </div>
+                        <div class="tab-panel" id="information-content" style="display: none;">
+                            <p>{{produit.info}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </section>
+
+
+
+
 
     <div class="container py-5 border-bottom">
 
@@ -135,15 +143,16 @@
             <h2>Related Products</h2>
         </div>
 
-        <div class="row product-list">
+        <div class="row mt-3">
 
             {{#each pruductsbycategorie}}
 
-            <div class="col-4 products">
+            <div class="col-6 col-md-4 col-lg-3 py-3">
                 <button class="produits" id="{{this.id}}">
                     <div class="product-container">
                         <a href="#">
-                            <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded" style="width: 230px; height: 230px">
+                            <img src="/img/produits/{{this.id}}/main.jpg" class="img-thumbnail rounded"
+                                style="width: 230px; height: 230px">
                         </a>
                         <a href="#" class="product-id">ID:{{this.code}}</a>
                         <a href="#" class="product-name">#{{this.code}} {{this.name}}</a>

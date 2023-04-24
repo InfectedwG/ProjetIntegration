@@ -287,8 +287,8 @@ app.get('/privacy-policy', async (request, response) => {
 app.get('/panier', async (request, response) => {
 
     let orderStatus = false;
-    
-    if(request.query){
+
+    if (request.query) {
         orderStatus = request.query.order_status;
     }
 
@@ -428,13 +428,13 @@ app.patch('/api/update_cart', async (request, response) => {
 
         let cart = await model.getCartIdByUserIdDB(request.user.id);
         let cart_id = cart.id;
-        
+
         for (let item of cartItems) {
 
             if (item.quantity === 0) await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
 
             else {
-                await model.updateCartItemsByProductIdAndCartIdDB(cart_id, item.product_id, item.quantity, item.is_selected);                
+                await model.updateCartItemsByProductIdAndCartIdDB(cart_id, item.product_id, item.quantity, item.is_selected);
             }
         }
         let cartItemsUpdated = await model.getCartListItemsByUserIdDB(request.user.id);
@@ -445,7 +445,7 @@ app.patch('/api/update_cart', async (request, response) => {
             item.subtotal = productSubtotal.toFixed(2);
             subtotal += productSubtotal;
         }
-        let taxAmount = taxRate*subtotal;
+        let taxAmount = taxRate * subtotal;
         let total = subtotal * (1 + taxRate);
 
         let headerCart = serveur.headerCartMethode(request.user);
@@ -532,14 +532,14 @@ app.post('/api/place-order', async (request, response) => {
 
             let billingInfo = await model.getBillingInfoByAddressIdDB(request.user.billing_address_id);
             if (!_.isEqual(billingInfo, request.body.billingInfo)) await model.updateUserBillingInfoDB(request.body.billingInfo, request.user.id);
-            
+
             let order_id = await model.placeOrderDB(request.user.id, 0.0, total, todayEpoch);
             if (order_id) {
                 for (let item of orderItems) {
                     await model.insertOrderDetailsDB(order_id, item.product_id, item.quantity);
                     await model.deleteCartItemsByProductIdAndCartIdDB(cart_id, item.product_id);
                 }
-                response.status(201).json({order_status: true}).end();
+                response.status(201).json({ order_status: true }).end();
             }
             else response.status(403).json({ message: "erreur order_id" }).end();
         }
@@ -645,27 +645,29 @@ app.patch('/api/profile-password', async (request, response) => {
 
     if (request.user && request.user.access_id === 1) {
 
-        if(validatePassword(request.body.password))
+        
 
-        try {
-            if (!request.user) {
-                return response.status(404).json({ message: 'Utilisateur non trouvé' });
+            try {
+                if (!request.user) {
+                    return response.status(404).json({ message: 'Utilisateur non trouvé' });
+                }
+
+                console.log(request.body);
+                await model.updateUserPassword(request.user.id, request.body.passwordRegister);
+
+                let user = await model.getUserById(request.user.id);
+                // Renvoyer la réponse
+                response.status(201).json(user).end();
+            } catch (error) {
+                console.error(error);
+                response.status(500).json({ message: 'Erreur serveur' });
             }
-
-            console.log(request.body);
-            await model.updateUserPassword(request.user.id, request.body.passwordRegister);
-
-            let user = await model.getUserById(request.user.id);
-            // Renvoyer la réponse
-            response.status(201).json(user).end();
-        } catch (error) {
-            console.error(error);
-            response.status(500).json({ message: 'Erreur serveur' });
-        }
+        
     }
     else {
         response.status(403).end();
     }
+
 });
 
 

@@ -219,3 +219,39 @@
     border: none;
 }
 
+@media (max-width: 991.98px) {
+    .tabs {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    .tab {
+        padding: 0.5rem 1rem;
+        margin-bottom: -1px;
+        font-weight: bold;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        width: 50%;
+    }
+
+    .tab.active {
+        border-bottom: none;
+    }
+
+    .tab:not(.active) {
+        border-bottom: none;
+    }
+
+    .tab-content {
+        width: 100%;
+    }
+
+    .tab-panel {
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+    }
+}
+
+
