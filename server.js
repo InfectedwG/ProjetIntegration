@@ -645,8 +645,8 @@ app.patch('/api/update-info', async (request, response) => {
 
             let currentShippingInfo = await model.getShippingInfoByAddressIdDB(request.user.shipping_address_id);
             if (!_.isEqual(currentShippingInfo, incomingShippingInfo)) await model.updateUserShippingInfoDB(incomingShippingInfo, request.user.id);
-            
-            if(!_.isEqual(currentUserInfo, incomingUserInfo)) await model.updateUserInfo(incomingUserInfo, request.user.id);
+
+            if (!_.isEqual(currentUserInfo, incomingUserInfo)) await model.updateUserInfo(incomingUserInfo, request.user.id);
 
             let user = await model.getAdresseById(request.user.id);
             // Renvoyer la réponse
@@ -665,27 +665,29 @@ app.patch('/api/profile-password', async (request, response) => {
 
     if (request.user && request.user.access_id === 1) {
 
-        if (validatePassword(request.body.password))
 
-            try {
-                if (!request.user) {
-                    return response.status(404).json({ message: 'Utilisateur non trouvé' });
-                }
 
-                console.log(request.body);
-                await model.updateUserPassword(request.user.id, request.body.passwordRegister);
-
-                let user = await model.getUserById(request.user.id);
-                // Renvoyer la réponse
-                response.status(201).json(user).end();
-            } catch (error) {
-                console.error(error);
-                response.status(500).json({ message: 'Erreur serveur' });
+        try {
+            if (!request.user) {
+                return response.status(404).json({ message: 'Utilisateur non trouvé' });
             }
+
+            console.log(request.body);
+            await model.updateUserPassword(request.user.id, request.body.passwordRegister);
+
+            let user = await model.getUserById(request.user.id);
+            // Renvoyer la réponse
+            response.status(201).json(user).end();
+        } catch (error) {
+            console.error(error);
+            response.status(500).json({ message: 'Erreur serveur' });
+        }
+
     }
     else {
         response.status(403).end();
     }
+
 });
 
 
